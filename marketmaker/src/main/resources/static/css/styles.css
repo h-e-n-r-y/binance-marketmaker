@@ -1,0 +1,36 @@
+div.navigation ul {
+	list-style: none;
+	
+}
+
+body {
+	font-family: 'Arial',"Microsoft YaHei", sans-serif;
+}
+
+table.orders td {
+	padding: 0 5px;
+}
+
+table.orders tr.sell {
+	color: red;
+}
+table.orders tr.buy {
+	color: green;
+}
+p.price {
+	font-weight: bold;
+}
+
+table.balances td {
+	padding: 0 5px;
+}
+
+table.balances td.free {
+	text-align: right;
+}
+table.balances td.locked {
+	text-align: right;
+}
+table.balances td.value {
+	text-align: right;
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MarketMaker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+	<div th:replace="include/navigation :: topnavi"></div>
+
+    <h3>Marketprice</h3>
+    <p class="price" th:text="${symbol} + ': ' + ${price}" />
+    <form method="post">
+    <input type="hidden" name="symbol" th:value="${symbol}"/>
+    <input type="submit" name="Refresh" value="Refresh"/>
+    </form>
+
+    <h3>Balances</h3>
+    <table class="balances">
+      <tr>
+        <th>Symbol</th>
+        <th>free</th>
+        <th>locked</th>
+        <th>value</th>
+      </tr>
+      <tr th:each="balance : ${balances}">
+        <td class="symbol" th:text="${balance.asset}">ETH</td>
+        <td class="free" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
+        <td class="locked" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>
+        <td class="value" th:text="${#numbers.formatDecimal(balance.value,1,8)} + ${balance.valueSymbol}">2.414344ETH</td>
+      </tr>
+    </table>
+
+    <h3>Trading Status</h3>
+    <p class="status" th:text="${status}" />
+    <p class="tradeprice" th:text="${tradePrice}" />
+    
+    
+    <h3>Orders</h3>
+    <table class="orders">
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Filled</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      <tr th:each="order : ${orders}" th:class="${#strings.toLowerCase(order.side)}">
+		<form method="post">
+    		<input type="hidden" name="symbol" th:value="${symbol}"/>
+    		<input type="hidden" name="orderID" th:value="${order.orderId}"/>
+        <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>
+        <td th:text="${order.side}">Buy</td>
+        <td th:text="${order.origQty}">2.414343</td>
+        <td th:text="${order.executedQty}">2.414343</td>
+        <td th:text="${order.price}">2.414343</td>
+        <td th:text="${order.status}">FILLED</td>
+        <td><input th:if="${order.canCancel}" type="submit" value="Cancel" name="cancelOrder"/></td>
+        </form>
+      </tr>
+    </table>
+</body>
+</html>
