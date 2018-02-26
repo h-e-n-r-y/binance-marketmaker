@@ -32,8 +32,8 @@
     </table>
 
     <h3>Trading Status</h3>
-    <p class="status" th:text="${status}" />
-    <p class="tradeprice" th:text="${tradePrice}" />
+    <p th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
+    <p th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
     
     
     <h3>Orders</h3>
@@ -47,15 +47,15 @@
         <th>Status</th>
         <th>Action</th>
       </tr>
-      <tr th:each="order : ${orders}" th:class="${#strings.toLowerCase(order.side)}">
+      <tr th:each="order,iterStat : ${orders}" th:class="${#strings.toLowerCase(order.side)} + ' count' + ${iterStat.count}">
 		<form method="post">
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
     		<input type="hidden" name="orderID" th:value="${order.orderId}"/>
         <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>
         <td th:text="${order.side}">Buy</td>
-        <td th:text="${order.origQty}">2.414343</td>
-        <td th:text="${order.executedQty}">2.414343</td>
-        <td th:text="${order.price}">2.414343</td>
+        <td th:text="${#numbers.formatDecimal(order.origQty,1,8)}">2.414343</td>
+        <td th:text="${#numbers.formatDecimal(order.executedQty,1,8)}">2.414343</td>
+        <td th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
         <td th:text="${order.status}">FILLED</td>
         <td><input th:if="${order.canCancel}" type="submit" value="Cancel" name="cancelOrder"/></td>
         </form>

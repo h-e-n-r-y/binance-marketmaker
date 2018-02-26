@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MarketMaker - Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+    	<div th:replace="include/navigation :: topnavi"></div>
+    
+    <h3>Select Market</h3>
+	<form method="post" action="/trade">
+	Symbol: <input type="text" name="symbol"/>
+	<input type="submit"/>
+	</form>
+
+</body>
+</html>

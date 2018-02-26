@@ -2,6 +2,7 @@ package de.hw4.binance.marketmaker;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class MarketController {
         BinanceApiRestClient binanceClient = clientFactory.getClient();
         
         if (pCancelOrder != null && pCancelOrder.equals("Cancel")) {
+        		// Cancel Order
         		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(symbol, Long.parseLong(pOrderID));
         		binanceClient.cancelOrder(cancelOrderRequest);
         }
@@ -125,12 +127,12 @@ public class MarketController {
         
         
         if (status == Status.UNKNOWN) {
-	        	BigDecimal qty2 = assetBalance2.getFree();
+	        	BigDecimal free2 = assetBalance2.getFree();
 	        	
 	    		if (assetBalance1 == null || assetBalance1.getValue().compareTo(assetBalance2.getFree()) < 0) {
 	    			// BUY
 	    			if (lastOrder != null) {
-	    				tradePrice =  qty2.divide(lastOrder.getOrigQty().multiply(buyPercentage));
+	    				tradePrice =  free2.divide(lastOrder.getOrigQty(), 8, RoundingMode.HALF_UP).multiply(buyPercentage);
 	    				if (tradePrice.compareTo(price) > 0) {
 	    					// current price is less 
 		    				// take current price
@@ -157,8 +159,19 @@ public class MarketController {
         model.addAttribute("status", status);
         model.addAttribute("tradePrice", tradePrice);
 
+        // TODO: User-Mgt.
+        String username = "h-e-n-r-y";
+        model.addAttribute("username", username);
+
         return "trade";
     }
 	
-
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home(Model model) {
+        // TODO: User-Mgt.
+        String username = "h-e-n-r-y";
+        model.addAttribute("username", username);
+        return "index";
+	}
+	
 }

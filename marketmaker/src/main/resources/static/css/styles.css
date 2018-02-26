@@ -1,6 +1,37 @@
 div.navigation ul {
 	list-style: none;
-	
+	margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;	
+}
+
+div.navigation ul li {
+	float: left;
+}
+
+div.navigation ul li a {
+	display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+div.navigation ul li a:hover {
+    background-color: #111111;
+}
+
+p.status.waiting {
+	color: blue;
+}
+
+p.status.propose_buy {
+	color: green;
+}
+
+p.status.propose_buy {
+	color: red;
 }
 
 body {
@@ -17,8 +48,19 @@ table.orders tr.sell {
 table.orders tr.buy {
 	color: green;
 }
+table.orders tr.count1 {
+	background: PapayaWhip;
+}
+table.orders th {
+	background: #eeeeee;
+}
+	
 p.price {
 	font-weight: bold;
+}
+
+table.balances th {
+	background: #eeeeee;
 }
 
 table.balances td {
