@@ -76,3 +76,17 @@ table.balances td.locked {
 table.balances td.value {
 	text-align: right;
 }
+.login, .error {
+	margin-top: -5em;
+	margin-left: -10em;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+    width: 20em;
+    height: 7em;
+    border: 2px solid;
+    padding: 10px;
+}
+.login form {
+	margin-top: 1em;
+}

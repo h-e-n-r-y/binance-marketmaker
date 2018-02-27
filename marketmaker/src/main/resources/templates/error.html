@@ -8,11 +8,13 @@
 <body>
     	<div th:replace="include/navigation :: topnavi"></div>
     
-    <h3>Select Market</h3>
-	<form method="post" action="/trade"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
-	Symbol: <input type="text" name="symbol"/>
-	<input type="submit"/>
-	</form>
-
+    <div class="error">
+	<p th:text="${errormsg}">
+	    Invalid username and password.
+	</p>
+	<p th:text="${errormsg2}">
+	    Please contact the administrator!
+	</p>
+	</div>
 </body>
 </html>

@@ -10,7 +10,10 @@
 	<ul>
 	<li><a href="/">Home</a></li>
 	<li><a href="/funds">Funds</a></li>
-	<li><a href="/account" th:text="${username}">Account</a></li>
+	<li th:if="${#httpServletRequest.remoteUser}"><a href="/account" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
+	<li th:if="${#httpServletRequest.remoteUser}"><form id="logout" th:action="@{/logout}" method="post">
+            <a href="#" onclick="logout.submit()">Logout</a>
+        </form></li>
 	</ul>
 	</div>
 

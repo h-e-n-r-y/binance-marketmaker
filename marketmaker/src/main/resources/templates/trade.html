@@ -10,7 +10,7 @@
 
     <h3>Marketprice</h3>
     <p class="price" th:text="${symbol} + ': ' + ${price}" />
-    <form method="post">
+    <form method="post"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
     <input type="hidden" name="symbol" th:value="${symbol}"/>
     <input type="submit" name="Refresh" value="Refresh"/>
     </form>
@@ -48,7 +48,7 @@
         <th>Action</th>
       </tr>
       <tr th:each="order,iterStat : ${orders}" th:class="${#strings.toLowerCase(order.side)} + ' count' + ${iterStat.count}">
-		<form method="post">
+		<form method="post"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
     		<input type="hidden" name="orderID" th:value="${order.orderId}"/>
         <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>

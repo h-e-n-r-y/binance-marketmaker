@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MarketMaker - Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+    	<div th:replace="include/navigation :: topnavi"></div>
+    
+    <div class="login">
+	<div th:if="${param.error}">
+	    Invalid username and password.
+	</div>
+	<div th:if="${param.logout}">
+	    You have been logged out.
+	</div>
+	<form th:action="@{/login}" method="post">
+		<table>
+	    <tr><td><label for="username"> User Name : </label></td><td><input type="text" name="username" id="username"/></td></tr>
+	    <tr><td><label for="password"> Password: </label></td><td><input type="password" name="password"/> </td></tr>
+	    <tr><td> </td><td><input type="submit" value="Sign In"/></td></tr>
+	    </table>
+	</form>
+	</div>
+</body>
+</html>

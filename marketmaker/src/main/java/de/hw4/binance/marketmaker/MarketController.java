@@ -9,6 +9,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +66,16 @@ public class MarketController {
         model.addAttribute("symbol1", symbol1);
         model.addAttribute("symbol2", symbol2);
         
-        BinanceApiRestClient binanceClient = clientFactory.getClient();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        
+        BinanceApiRestClient binanceClient = clientFactory.getClient(currentPrincipalName);
+        
+        if (binanceClient == null) {
+            model.addAttribute("errormsg", "No valid api key found for user '" + currentPrincipalName + "'");
+            model.addAttribute("errormsg2", "Please contact the administrator!");
+            return "error";
+        }
         
         if (pCancelOrder != null && pCancelOrder.equals("Cancel")) {
         		// Cancel Order
@@ -159,19 +170,17 @@ public class MarketController {
         model.addAttribute("status", status);
         model.addAttribute("tradePrice", tradePrice);
 
-        // TODO: User-Mgt.
-        String username = "h-e-n-r-y";
-        model.addAttribute("username", username);
-
         return "trade";
     }
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
-        // TODO: User-Mgt.
-        String username = "h-e-n-r-y";
-        model.addAttribute("username", username);
         return "index";
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(Model model) {
+        return "login";
 	}
 	
 }
