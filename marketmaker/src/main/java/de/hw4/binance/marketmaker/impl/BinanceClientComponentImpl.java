@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.domain.general.ExchangeInfo;
 
 import de.hw4.binance.marketmaker.BinanceClientComponent;
 
@@ -18,6 +19,8 @@ import de.hw4.binance.marketmaker.BinanceClientComponent;
 public class BinanceClientComponentImpl implements BinanceClientComponent {
 
 	private Map<String, BinanceApiRestClient> binanceClients;
+
+	private static ExchangeInfo exchangeInfo;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -44,5 +47,19 @@ public class BinanceClientComponentImpl implements BinanceClientComponent {
 			}
 		}
 		return client;
+	}
+
+	@Override
+	public ExchangeInfo getExchangeInfo() {
+		if (exchangeInfo != null) {
+			return exchangeInfo;
+		}
+		if (binanceClients.isEmpty()) {
+			// can only be retrieved after a client was created.
+			return null;
+		}
+		BinanceApiRestClient client = binanceClients.entrySet().iterator().next().getValue();
+		exchangeInfo = client.getExchangeInfo();
+		return exchangeInfo;
 	}
 }
