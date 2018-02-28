@@ -117,7 +117,7 @@ public class MarketController {
         
         TickerPrice tickerPrice = binanceClient.getPrice(symbol);
         BigDecimal price = Utils.parseDecimal(tickerPrice.getPrice());
-        model.addAttribute("price", tickerPrice.getPrice());
+        model.addAttribute("price", Utils.formatPrice(price, symbol, exchangeInfo));
         
         // Orders
         AllOrdersRequest orderRequest = new AllOrdersRequest(symbol);

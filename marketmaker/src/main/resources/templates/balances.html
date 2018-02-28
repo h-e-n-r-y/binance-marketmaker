@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MarketMaker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+	<div th:replace="include/navigation :: topnavi"></div>
+
+    <h3>Balances <form id="coinselect"><select name="basecoin" onchange="coinselect.submit()">
+    		<option th:selected="${symbol2 == 'BTC'}">BTC</option>
+    		<option th:selected="${symbol2 == 'ETH'}">ETH</option>
+    		<option th:selected="${symbol2 == 'USTD'}">USDT</option>
+    </select></form></h3>
+    <table class="balances">
+      <tr>
+        <th>Symbol</th>
+        <th>free</th>
+        <th>locked</th>
+        <th th:text="'value (' + ${symbol2} + ')'"></th>
+      </tr>
+      <tr th:each="balance : ${balances}">
+        <td class="symbol" th:text="${balance.asset}">ETH</td>
+        <td class="free" t="${balance.free}" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
+        <td class="locked" t="${balance.locked}" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>
+        <td th:if="${balance.value}" class="value" th:text="${#numbers.formatDecimal(balance.value,1,8)}">2.414344ETH</td>
+      </tr>
+    </table>
+
+</body>
+</html>

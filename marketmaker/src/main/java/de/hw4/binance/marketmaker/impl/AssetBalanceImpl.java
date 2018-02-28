@@ -24,17 +24,19 @@ public class AssetBalanceImpl {
 		this.balance = pBalance;
 		String assetSymbol = pBalance.getAsset();
 		this.free = Utils.parseDecimal(pBalance.getFree());
-		BigDecimal tickerPrice = Utils.parseDecimal(pPrice.getPrice());
 		this.locked = Utils.parseDecimal(pBalance.getLocked());
-		String tickerSymbol = pPrice.getSymbol();
-		String asset1 = Utils.getSymbol1(tickerSymbol);
-		String asset2 = Utils.getSymbol2(tickerSymbol);
-		if (asset1.equals(assetSymbol)) {
-			value = free.multiply(tickerPrice);
-			valueSymbol = asset2;
-		} else {
-			value = free.divide(tickerPrice, BigDecimal.ROUND_HALF_UP);
-			valueSymbol = asset1;
+		if (pPrice != null) {
+			BigDecimal tickerPrice = Utils.parseDecimal(pPrice.getPrice());
+			String tickerSymbol = pPrice.getSymbol();
+			String asset1 = Utils.getSymbol1(tickerSymbol);
+			String asset2 = Utils.getSymbol2(tickerSymbol);
+			if (asset1.equals(assetSymbol)) {
+				value = free.add(locked).multiply(tickerPrice);
+				valueSymbol = asset2;
+			} else {
+				value = free.add(locked).divide(tickerPrice, BigDecimal.ROUND_HALF_UP);
+				valueSymbol = asset1;
+			}
 		}
 	}
 	

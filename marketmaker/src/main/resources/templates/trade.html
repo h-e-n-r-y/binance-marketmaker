@@ -62,10 +62,10 @@
     		<input type="hidden" name="orderID" th:value="${order.orderId}"/>
         <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>
         <td th:text="${order.side}">Buy</td>
-        <td th:text="${#numbers.formatDecimal(order.origQty,1,8)}">2.414343</td>
-        <td th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
-        <td th:text="${#numbers.formatDecimal(order.executedQty,1,8)}">2.414343</td>
-        <td th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.origQty,1,2)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.executedQty,1,2)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
         <td th:text="${order.status}">FILLED</td>
         <td><input th:if="${order.canCancel}" type="submit" value="Cancel" name="cancelOrder"/></td>
         </form>
