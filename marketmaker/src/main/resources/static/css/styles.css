@@ -10,6 +10,10 @@ div.navigation ul li {
 	float: left;
 }
 
+div.navigation ul li.right {
+	float: right;
+}
+
 div.navigation ul li a {
 	display: block;
     color: white;
@@ -22,15 +26,19 @@ div.navigation ul li a:hover {
     background-color: #111111;
 }
 
+#nav_wrapper ul {
+	width: 100%;
+}
+
 p.status.waiting {
 	color: blue;
 }
 
-p.status.propose_buy {
+span.status.propose_buy {
 	color: green;
 }
 
-p.status.propose_buy {
+span.status.propose_buy {
 	color: red;
 }
 
@@ -86,7 +94,41 @@ table.balances td.value {
     height: 7em;
     border: 2px solid;
     padding: 10px;
+    background-color:Lightgray;
+    filter:alpha(opacity=70);
+    opacity:0.7;
 }
 .login form {
 	margin-top: 1em;
+}
+
+input.submit-buy {
+	background: green;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	width: 150px;
+	height: 40px;
+}
+input.input-price {
+	font-weight: bold;
+	font-size: 16px;
+	width: 150px;
+	padding: 7px;
+}
+
+input.input-quantity {
+	font-weight: bold;
+	font-size: 16px;
+	width: 60px;
+	padding: 7px;
+}
+
+input.submit-sell {
+	background: red;
+	color: black;
+	font-weight: bold;
+	font-size: 16px;
+	width: 150px;
+	height: 40px;
 }

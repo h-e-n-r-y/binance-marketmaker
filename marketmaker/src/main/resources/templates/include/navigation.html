@@ -7,15 +7,19 @@
 </head>
 <body>
 	<div th:fragment="topnavi" class="navigation">
+	<div id="nav_wrapper">
+	
 	<ul>
 	<li><a href="/">Home</a></li>
 	<li><a href="/funds">Funds</a></li>
-	<li th:if="${#httpServletRequest.remoteUser}"><a href="/account" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
-	<li th:if="${#httpServletRequest.remoteUser}"><form id="logout" th:action="@{/logout}" method="post">
+	<li><a href="/orders">Orders</a></li>
+	<li> <!-- placeholder --></li>
+	<li class="right" th:if="${#httpServletRequest.remoteUser}"><a href="/account" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
+	<li class="right" th:if="${#httpServletRequest.remoteUser}"><form id="logout" th:action="@{/logout}" method="post">
             <a href="#" onclick="logout.submit()">Logout</a>
         </form></li>
 	</ul>
-	</div>
+	</div></div>
 
 </body>
 </html>

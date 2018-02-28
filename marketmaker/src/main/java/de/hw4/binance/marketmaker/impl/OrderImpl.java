@@ -46,6 +46,13 @@ public class OrderImpl {
 		return Utils.parseDecimal(order.getExecutedQty());
 	}
 	
+	/**
+	 * @return Quantity of other asset.
+	 */
+	public BigDecimal getQty2() {
+		return getOrigQty().multiply(getPrice());
+	}
+	
 	public boolean getCanCancel() {
 		return order.getStatus() == OrderStatus.NEW;
 	}

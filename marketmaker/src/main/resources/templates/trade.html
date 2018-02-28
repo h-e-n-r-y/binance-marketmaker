@@ -32,8 +32,16 @@
     </table>
 
     <h3>Trading Status</h3>
-    <p th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
-    <p th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
+    <p class="error" th:if="${errormsg}" th:text="${errormsg}"/>
+    <span th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
+    <span th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
+    <form th:if="${tradePrice}" method="post"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+    		<input type="hidden" name="symbol" th:value="${symbol}"/>
+    		Quantity: <input type="text" class="input-quantity" name="quantity" th:value="${quantity}"/>
+    		Price: <input type="text" class="input-price" name="pricelimit" th:value="${tradePrice}"/>
+    		<input type="hidden" name="side" th:value="(${status.name} == 'PROPOSE_BUY')? 'buy' : 'sell'"/>
+    		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
+    </form>
     
     
     <h3>Orders</h3>
@@ -42,6 +50,7 @@
         <th>Date</th>
         <th>Type</th>
         <th>Amount</th>
+        <th th:text="'Amount (' + ${symbol2} + ')'">Amount2</th>
         <th>Filled</th>
         <th>Price</th>
         <th>Status</th>
@@ -54,6 +63,7 @@
         <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>
         <td th:text="${order.side}">Buy</td>
         <td th:text="${#numbers.formatDecimal(order.origQty,1,8)}">2.414343</td>
+        <td th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
         <td th:text="${#numbers.formatDecimal(order.executedQty,1,8)}">2.414343</td>
         <td th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
         <td th:text="${order.status}">FILLED</td>

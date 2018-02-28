@@ -3,6 +3,8 @@ package de.hw4.binance.marketmaker.impl;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
+
 public class UtilsTest {
 
 	@Test
@@ -25,5 +27,20 @@ public class UtilsTest {
 		assertEquals("symbol2 wrong", "ETH", Utils.getSymbol2("IOSTETH"));
 		assertEquals("symbol2 wrong", "ETH", Utils.getSymbol2("NEO_ETH"));
 		assertEquals("symbol2 wrong", "ETH", Utils.getSymbol2("IOST_ETH"));
+	}
+	
+	@Test
+	public void testFormatDecimal() {
+		assertEquals("0.00012345", Utils.formatDecimal(BigDecimal.valueOf(0.00012345d)));
+		assertEquals("10.00012345", Utils.formatDecimal(BigDecimal.valueOf(10.00012345d)));
+		assertEquals("0.00012346", Utils.formatDecimal(BigDecimal.valueOf(0.000123459d)));
+		assertEquals("10.00000000", Utils.formatDecimal(BigDecimal.valueOf(10)));
+	}
+	
+	@Test
+	public void testRoundToTickSize() {
+		assertEquals("0.12346", Utils.roundToTickSize(BigDecimal.valueOf(0.123456789d), "0.00001"));
+		assertEquals("0.12345", Utils.roundToTickSize(BigDecimal.valueOf(0.12345111d), "0.00001"));
+		assertEquals("0.123", Utils.roundToTickSize(BigDecimal.valueOf(0.12345111d), "0.001"));
 	}
 }

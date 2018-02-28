@@ -1,19 +1,29 @@
 package de.hw4.binance.marketmaker.impl;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.binance.api.client.domain.general.ExchangeInfo;
+import com.binance.api.client.domain.general.FilterType;
+import com.binance.api.client.domain.general.SymbolInfo;
+
 public class Utils {
 	
 	static Logger logger = LoggerFactory.getLogger(Utils.class);
 	
-	static DecimalFormat decFmt = new DecimalFormat();
+	static DecimalFormat decFmt = new DecimalFormat("0.00000000");
+	static DecimalFormat priceFmt = new DecimalFormat("0.########");
+	static DecimalFormat qtyFmt = new DecimalFormat("0.00");
 	static {
 		decFmt.setParseBigDecimal(true);
+		priceFmt.setParseBigDecimal(true);
+		qtyFmt.setParseBigDecimal(true);
 	}
 
 	private Utils(){		
@@ -53,4 +63,31 @@ public class Utils {
 		}
 		return BigDecimal.valueOf(0);
 	}
+
+	public static String formatDecimal(BigDecimal pDecimal) {
+		return decFmt.format(pDecimal);
+	}
+
+	/**
+	 * Format a price according to it's ticksize rule. 
+	 * @param pDecimal
+	 * @param pSymbol
+	 * @param pExchangeInfo
+	 * @return
+	 */
+	public static String formatPrice(BigDecimal pDecimal, String pSymbol, ExchangeInfo pExchangeInfo) {
+		SymbolInfo symbolInfo = pExchangeInfo.getSymbolInfo(pSymbol);
+		String tickSize = symbolInfo.getSymbolFilter(FilterType.PRICE_FILTER).getTickSize();
+		return roundToTickSize(pDecimal, tickSize);
+	}
+
+	protected static String roundToTickSize(BigDecimal pDecimal, String tickSize) {
+		int precision = tickSize.indexOf('1') - 1;
+		return priceFmt.format(pDecimal.setScale(precision, RoundingMode.HALF_UP));
+	}
+
+	public static String formatQuantity(BigDecimal pQuantity) {
+		return qtyFmt.format(pQuantity);
+	}
+
 }
