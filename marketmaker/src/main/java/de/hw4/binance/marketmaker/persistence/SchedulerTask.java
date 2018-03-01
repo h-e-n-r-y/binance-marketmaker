@@ -37,6 +37,10 @@ public class SchedulerTask {
 		active = false;
 	}
 	
+	public String getUser() {
+		return user;
+	}
+	
 	public boolean getActive() {
 		return active != null ? active : false;
 	}

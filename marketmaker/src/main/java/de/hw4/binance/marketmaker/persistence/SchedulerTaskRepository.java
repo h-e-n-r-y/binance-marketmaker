@@ -9,5 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface SchedulerTaskRepository extends CrudRepository<SchedulerTask, Long> {
 	
 	List<SchedulerTask> findByUser(String pUsername); 
+	List<SchedulerTask> findByActive(boolean pActive); 
 
 }
