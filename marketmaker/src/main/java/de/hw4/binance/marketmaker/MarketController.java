@@ -34,6 +34,8 @@ import com.binance.api.client.exception.BinanceApiException;
 import de.hw4.binance.marketmaker.impl.AssetBalanceImpl;
 import de.hw4.binance.marketmaker.impl.OrderImpl;
 import de.hw4.binance.marketmaker.impl.Utils;
+import de.hw4.binance.marketmaker.persistence.SchedulerTask;
+import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
 
 @Controller
 public class MarketController {
@@ -52,8 +54,50 @@ public class MarketController {
 	@Autowired
 	BinanceClientComponent clientFactory;
 	
+	@Autowired
+	SchedulerTaskRepository schedulerTaskRepo;
+		
+	
 	static Logger logger = LoggerFactory.getLogger(MarketController.class);
 
+	@RequestMapping(value = "/task", method = RequestMethod.POST)
+    public String handleTask(
+    		@RequestParam(value="symbol", required=true) String pSymbol,
+    		// activate the task
+    		@RequestParam(value="activateTask", required=false) String pActivateTask, 
+    		// remove a task
+    		@RequestParam(value="removeTask", required=false) String pRemoveTask, 
+
+    		Model model) {
+		
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        
+        String symbol = Utils.getSymbol(pSymbol);
+
+        SchedulerTask schedulerTask = schedulerTaskRepo.findOne(SchedulerTask.hash(userName, symbol));
+        if (schedulerTask == null) {
+        		schedulerTask = new SchedulerTask(userName, symbol);
+        		schedulerTaskRepo.save(schedulerTask);
+        } else {
+            if ("Remove".equals(pRemoveTask)) {
+            		schedulerTaskRepo.delete(schedulerTask);
+                 model.addAttribute("activeTasks", schedulerTaskRepo.findByUser(userName));
+            		return "index";
+            }
+        }
+		if ("Activate".equals(pActivateTask)) {
+			schedulerTask.activate();
+			schedulerTaskRepo.save(schedulerTask);
+		}
+
+		if ("Deactivate".equals(pActivateTask)) {
+			schedulerTask.deactivate();
+			schedulerTaskRepo.save(schedulerTask);
+		}
+		model.addAttribute("task", schedulerTask);
+		return trade(pSymbol, null, null, null, null, null, null, model);
+	}
 
 	@RequestMapping(value = "/trade", method = RequestMethod.POST)
     public String trade(
@@ -80,16 +124,23 @@ public class MarketController {
         model.addAttribute("symbol2", symbol2);
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
+        String userName = authentication.getName();
         
-        BinanceApiRestClient binanceClient = clientFactory.getClient(currentPrincipalName);
-        
+        BinanceApiRestClient binanceClient = clientFactory.getClient(userName);
+                
         if (binanceClient == null) {
-            model.addAttribute("errormsg", "No valid api key found for user '" + currentPrincipalName + "'");
+            model.addAttribute("errormsg", "No valid api key found for user '" + userName + "'");
             model.addAttribute("errormsg2", "Please contact the administrator!");
             return "error";
         }
         
+        SchedulerTask schedulerTask = schedulerTaskRepo.findOne(SchedulerTask.hash(userName, symbol));
+        if (schedulerTask == null) {
+        		schedulerTask = new SchedulerTask(userName, symbol);
+        		schedulerTaskRepo.save(schedulerTask);
+        }
+        model.addAttribute("task", schedulerTask);
+
         ExchangeInfo exchangeInfo = binanceClient.getExchangeInfo();
         
         if (pCancelOrder != null && pCancelOrder.equals("Cancel")) {
@@ -174,9 +225,9 @@ public class MarketController {
         
         
         if (status == Status.UNKNOWN) {
-	        	BigDecimal free2 = assetBalance2.getFree();
+	        	BigDecimal free2 = assetBalance2 == null ? BigDecimal.valueOf(0) : assetBalance2.getFree();
 	        	
-	    		if (assetBalance1 == null || assetBalance1.getValue().compareTo(assetBalance2.getFree()) < 0) {
+	    		if (assetBalance1 == null || assetBalance1.getValue().compareTo(free2) < 0) {
 	    			// BUY
 	    			if (lastOrder != null) {
 	    				tradePrice =  free2.divide(lastOrder.getOrigQty(), 8, RoundingMode.HALF_UP).multiply(buyPercentage);
@@ -189,7 +240,7 @@ public class MarketController {
 	    				// take current price
 	    				tradePrice = price.multiply(buyPercentageCurrentPrice);
 	    			}
-	    			quantity = assetBalance2.getFree().divide(tradePrice, 2, RoundingMode.FLOOR);
+	    			quantity = free2.divide(tradePrice, 2, RoundingMode.FLOOR);
 	        		status = Status.PROPOSE_BUY;
 	    		} else {
 	    			// Sell
@@ -218,7 +269,14 @@ public class MarketController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
-        return "index";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        if ("sa".equals(userName)) {
+        		return "redirect:/console";
+        }
+        List<SchedulerTask> schedulerTasks = schedulerTaskRepo.findByUser(userName);
+        model.addAttribute("activeTasks", schedulerTasks);
+		return "index";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
