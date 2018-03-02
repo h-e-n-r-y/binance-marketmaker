@@ -9,17 +9,8 @@
     	<div th:replace="include/navigation :: topnavi"></div>
     
     <div class="error">
-	<p th:if="${errormsg}" th:text="${errormsg}">
-	    Invalid username and password.
-	</p>
-	<p th:if="${errormsg2}" th:text="${errormsg2}">
-	    Please contact the administrator!
-	</p>
-	<p th:if="${error}" th:text="${error}">
-	    Invalid username and password.
-	</p>
-	<p th:if="${message}" th:text="${message}">
-	    Invalid username and password.
+	<p>
+	    Registration successful. Please <a href="/">Login!</a>
 	</p>
 	</div>
 </body>

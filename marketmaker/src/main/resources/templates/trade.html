@@ -10,9 +10,13 @@
 
     <h3>Marketprice</h3>
     <p class="price" th:text="${symbol} + ': ' + ${price}" />
-    <form method="post"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+    <form method="post" style="float:left"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
     <input type="hidden" name="symbol" th:value="${symbol}"/>
-    <input type="submit" name="Refresh" value="Refresh"/>
+    <input type="submit" class="refresh" name="Refresh" value="Refresh"/>
+    </form>
+    <form method="post" action="/task"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+    <input type="hidden" name="symbol" th:value="${symbol}"/>
+    <input th:if="${task}" type="submit" name="activateTask" th:class="${task.active} ? 'deactivate' : 'activate'" th:value="${task.active} ? 'Deactivate' : 'Activate'"/>
     </form>
 
     <h3>Balances</h3>
@@ -35,7 +39,7 @@
     <p class="error" th:if="${errormsg}" th:text="${errormsg}"/>
     <span th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
     <span th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
-    <form th:if="${tradePrice}" method="post"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+    <form th:if="${tradePrice}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
     		Quantity: <input type="text" class="input-quantity" name="quantity" th:value="${quantity}"/>
     		Price: <input type="text" class="input-price" name="pricelimit" th:value="${tradePrice}"/>

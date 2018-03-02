@@ -13,6 +13,25 @@
 	Symbol: <input type="text" name="symbol"/>
 	<input type="submit"/>
 	</form>
+	
+	<h3>Active Tasks</h3>
+    <table class="tasks">
+      <tr>
+        <th>Symbol</th>
+      </tr>
+      <tr  th:class="${task.active} ? 'active' : 'inactive'" th:each="task : ${activeTasks}">
+        <td class="symbol" th:text="${task.symbol}">ETH</td>
+        <td><form action="/trade" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        		<input type="hidden" name="symbol" th:value="${task.symbol}"/>
+        		<input type="submit" name="trade" value="Trade"/></form>
+        	</td>
+        <td><form action="/task" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        		<input type="hidden" name="symbol" th:value="${task.symbol}"/>
+        		<input type="submit" name="removeTask" value="Remove"/></form>
+        	</td>
+      </tr>
+     </table>
+      
 
 </body>
 </html>

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MarketMaker - Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+    	<div th:replace="include/navigation :: topnavi"></div>
+    
+    <div class="login">
+	<div th:if="${error}" th:text="${error}">
+	    Invalid username and password.
+	</div>
+	<form th:action="@{/register}" method="post">
+		<table>
+	    <tr><td class="label"><label for="username"> User Name: </label></td><td><input type="text" name="username" id="username" th:value="${username}"/></td></tr>
+	    <tr><td class="label"><label for="pwd"> Password: </label></td><td><input type="password" name="pwd"/> </td></tr>
+	    <tr><td class="label"><label for="pwd2"> Password (repeat): </label></td><td><input type="password" name="pwd2"/> </td></tr>
+	    <tr><td> </td><td colspan="2"><input type="submit" value="Create Account"/></td></tr>
+	    </table>
+	</form>
+	</div>
+</body>
+</html>
