@@ -32,5 +32,10 @@ First you must register a user with the same username, under which you installed
 
 ## Disclaimer
 
-The app has lots of bugs! These bugs may lead to major loss!
+The app has lots of bugs and it's state is far from being ready! 
+These bugs may lead to major loss!
 Be careful to understand the sourcecode before using it for dealing with high amounts of coins!
+
+I appreciate comments, bugreports and suggestions for further development...
+
+Henry
