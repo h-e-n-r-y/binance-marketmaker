@@ -71,6 +71,7 @@ public class Scheduler {
             				Utils.formatQuantity(action.getQuantity()), 
             				Utils.formatPrice(action.getTradePrice(), action.getTickerPrice().getSymbol(), exchangeInfo));
             		try {
+                		Utils.sleep(50); // prevent weird server time issues.
             			apiClient.newOrder(order);
             			task.setCurrentOrderPrice(action.getTradePrice());
             			task.setCurrentOrderQty(action.getQuantity());
