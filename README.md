@@ -25,3 +25,5 @@ Fill in api-key and secret.
 
 ## Start
 	mvn spring-boot:run
+	
+First you must register a user with the same username, under which you installed your api-key.
