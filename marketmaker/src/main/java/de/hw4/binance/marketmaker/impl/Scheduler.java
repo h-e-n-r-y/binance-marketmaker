@@ -53,8 +53,10 @@ public class Scheduler {
         		String tradePriceLog = "";
         		if (action.getTradePrice() != null) {
         			tradePriceLog = "@" + action.getTradePrice();
+        			log.info("Task ({}: {} {} {})", task.getUser(), action.getTickerPrice(), action.getStatus(), tradePriceLog);
+        		} else {
+        			log.info("Task ({}: {} waiting {}@{})", task.getUser(), action.getTickerPrice(), task.getCurrentOrderQty(), task.getCurrentOrderPrice());
         		}
-        		log.info("Task ({}: {} {} {})", task.getUser(), action.getTickerPrice(), action.getStatus(), tradePriceLog);
         		
         		
             if (action.getStatus() == Status.PROPOSE_BUY || action.getStatus() == Status.PROPOSE_SELL) {
@@ -67,6 +69,9 @@ public class Scheduler {
             				Utils.formatPrice(action.getTradePrice(), action.getTickerPrice().getSymbol(), exchangeInfo));
             		try {
             			apiClient.newOrder(order);
+            			task.setCurrentOrderPrice(action.getTradePrice());
+            			task.setCurrentOrderQty(action.getQuantity());
+            			tasksRepo.save(task);
             		} catch (BinanceApiException bae) {
             			log.error("error creating " + (action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL") + " order: ", 
             					bae.getMessage());

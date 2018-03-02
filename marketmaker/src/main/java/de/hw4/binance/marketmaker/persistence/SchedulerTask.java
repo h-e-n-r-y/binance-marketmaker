@@ -1,5 +1,7 @@
 package de.hw4.binance.marketmaker.persistence;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,8 +21,13 @@ public class SchedulerTask {
 	@Column
 	Boolean active;
 	
+	@Column
+	BigDecimal currentOrderPrice;
+	
+	@Column
+	BigDecimal currentOrderQty;
+	
 	public SchedulerTask() {
-		
 	}
 
 	public SchedulerTask(String pUserName, String pSymbol) {
@@ -52,5 +59,22 @@ public class SchedulerTask {
 	public String getSymbol() {
 		return marketSymbol;
 	}
+
+	public BigDecimal getCurrentOrderPrice() {
+		return currentOrderPrice;
+	}
+
+	public void setCurrentOrderPrice(BigDecimal currentOrderPrice) {
+		this.currentOrderPrice = currentOrderPrice;
+	}
+
+	public BigDecimal getCurrentOrderQty() {
+		return currentOrderQty;
+	}
+
+	public void setCurrentOrderQty(BigDecimal currentOrderQty) {
+		this.currentOrderQty = currentOrderQty;
+	}
+
 
 }
