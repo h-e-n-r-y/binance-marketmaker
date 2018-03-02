@@ -14,7 +14,7 @@ Installation
 ## Build binance-marketmaker:
 	cd ~/git
 	git clone https://github.com/h-e-n-r-y/binance-marketmaker.git
-	cd binance-java-api
+	cd binance-marketmaker/marketmaker
 	mvn install
 
 ## Install your binance-api-key
