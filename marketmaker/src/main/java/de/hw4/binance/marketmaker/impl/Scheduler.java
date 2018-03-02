@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import de.hw4.binance.marketmaker.Status;
+import de.hw4.binance.marketmaker.Trader;
 import de.hw4.binance.marketmaker.persistence.SchedulerTask;
 import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
 
@@ -22,6 +24,9 @@ public class Scheduler {
     
     @Autowired
     SchedulerTaskRepository tasksRepo;
+    
+    @Autowired
+    Trader trader;
 
     @Scheduled(fixedRate = 10000)
     public void reportCurrentTime() {
@@ -29,7 +34,8 @@ public class Scheduler {
         
         List<SchedulerTask> activeTasks = tasksRepo.findByActive(true);
         for (SchedulerTask task : activeTasks) {
-        		log.info("Task ({}, {})", task.getUser(), task.getSymbol());
+        		Status status = trader.trade(task);
+        		log.info("Task ({}, {}: {})", task.getUser(), task.getSymbol(), status);
         }
     }
 

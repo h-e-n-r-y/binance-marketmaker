@@ -40,22 +40,14 @@ import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
 @Controller
 public class MarketController {
 	
-	// of last sell order qty
-	BigDecimal buyPercentage = BigDecimal.valueOf(0.995); // TODO: configurable
-	// there is no last order
-	BigDecimal buyPercentageCurrentPrice = BigDecimal.valueOf(0.995); // TODO: configurable
-	
-	// of last buy-order price 
-	BigDecimal sellPercentage = BigDecimal.valueOf(1.01); // TODO: configurable
-	
-	// When market price is higher than last Buy
-	BigDecimal sellPercentageCurrentPrice = BigDecimal.valueOf(1.005);
-
 	@Autowired
 	BinanceClientComponent clientFactory;
 	
 	@Autowired
 	SchedulerTaskRepository schedulerTaskRepo;
+	
+	@Autowired
+	Trader trader;
 		
 	
 	static Logger logger = LoggerFactory.getLogger(MarketController.class);
@@ -111,17 +103,12 @@ public class MarketController {
     		@RequestParam(value="quantity", required=false) String pQuantity,
     		@RequestParam(value="pricelimit", required=false) String pPriceLimit,
     		
-    		Model model) {
-		
-		Status status = Status.UNKNOWN;
+    		Model pModel) {
 		
 
         String symbol1 = Utils.getSymbol1(pSymbol);
         String symbol2 = Utils.getSymbol2(pSymbol);
         String symbol = Utils.getSymbol(pSymbol);
-        model.addAttribute("symbol", symbol);
-        model.addAttribute("symbol1", symbol1);
-        model.addAttribute("symbol2", symbol2);
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -129,8 +116,8 @@ public class MarketController {
         BinanceApiRestClient binanceClient = clientFactory.getClient(userName);
                 
         if (binanceClient == null) {
-            model.addAttribute("errormsg", "No valid api key found for user '" + userName + "'");
-            model.addAttribute("errormsg2", "Please contact the administrator!");
+            pModel.addAttribute("errormsg", "No valid api key found for user '" + userName + "'");
+            pModel.addAttribute("errormsg2", "Please contact the administrator!");
             return "error";
         }
         
@@ -139,7 +126,6 @@ public class MarketController {
         		schedulerTask = new SchedulerTask(userName, symbol);
         		schedulerTaskRepo.save(schedulerTask);
         }
-        model.addAttribute("task", schedulerTask);
 
         ExchangeInfo exchangeInfo = binanceClient.getExchangeInfo();
         
@@ -153,7 +139,7 @@ public class MarketController {
         		try {
         			binanceClient.newOrder(order);
         		} catch (BinanceApiException bae) {
-                 model.addAttribute("errormsg", bae.getMessage());
+        			pModel.addAttribute("errormsg", bae.getMessage());
         		}
         }
         if (pCreateOrder != null && pCreateOrder.equals("Sell")) {
@@ -161,111 +147,41 @@ public class MarketController {
         		try {
         			binanceClient.newOrder(order);
         		} catch (BinanceApiException bae) {
-        			model.addAttribute("errormsg", bae.getMessage());
+        			pModel.addAttribute("errormsg", bae.getMessage());
         		}
         }
 
         
         TickerPrice tickerPrice = binanceClient.getPrice(symbol);
-        BigDecimal price = Utils.parseDecimal(tickerPrice.getPrice());
-        model.addAttribute("price", Utils.formatPrice(price, symbol, exchangeInfo));
-        
-        // Orders
-        AllOrdersRequest orderRequest = new AllOrdersRequest(symbol);
         List<OrderImpl> displayOrders = new ArrayList<>();
-        try {
-        		List<Order> allOrders = binanceClient.getAllOrders(orderRequest);
-        		for (Order order : allOrders) {
-        			if (order.getStatus() == OrderStatus.FILLED || 
-        					order.getStatus() == OrderStatus.NEW || 
-        					order.getStatus() == OrderStatus.PARTIALLY_FILLED) {
-        				displayOrders.add(0, new OrderImpl(order));
-        			}
-        		}
-        		model.addAttribute("orders", displayOrders);
-        } catch (BinanceApiException bae){
-			model.addAttribute("errormsg", bae.getMessage());
-        }
-        
-        AssetBalanceImpl assetBalance1 = null;
-        AssetBalanceImpl assetBalance2 = null;
-        
-        List<AssetBalance> balances = binanceClient.getAccount().getBalances();
         List<AssetBalanceImpl> displayBalances = new ArrayList<>();
-        for (AssetBalance bal : balances) {
-        		String asset = bal.getAsset();
-			if (symbol1.equals(asset) ||
-        				symbol2.equals(asset)) {
-        			AssetBalanceImpl assetBalance = new AssetBalanceImpl(bal, tickerPrice);
-				displayBalances.add(assetBalance);
-				
-				if (symbol1.equals(asset)) {
-					assetBalance1 = assetBalance;
-				} else {
-					assetBalance2 = assetBalance;
-				}
-        		}
-        }
-        model.addAttribute("balances", displayBalances);
+        TradingAction action = new TradingAction(tickerPrice);
         
-        OrderImpl lastOrder = displayOrders.isEmpty() ? null : displayOrders.get(0);
-        
-        if (!displayOrders.isEmpty()) {
-        		// inspect last order
-        		if (lastOrder.getStatus() == OrderStatus.NEW ||
-        				lastOrder.getStatus() == OrderStatus.PARTIALLY_FILLED) {
-        			status = Status.WAITING;
-        		}
-        }
-        
-        
-        
-        BigDecimal tradePrice = null;
-        BigDecimal quantity = null;
-        
-        
-        if (status == Status.UNKNOWN) {
-	        	BigDecimal free2 = assetBalance2 == null ? BigDecimal.valueOf(0) : assetBalance2.getFree();
-	        	
-	    		if (assetBalance1 == null || assetBalance1.getValue().compareTo(free2) < 0) {
-	    			// BUY
-	    			if (lastOrder != null) {
-	    				tradePrice =  free2.divide(lastOrder.getOrigQty(), 8, RoundingMode.HALF_UP).multiply(buyPercentage);
-	    				if (tradePrice.compareTo(price) > 0) {
-	    					// current price is less 
-		    				// take current price
-		    				tradePrice = price.multiply(buyPercentageCurrentPrice);
-	    				}
-	    			} else {
-	    				// take current price
-	    				tradePrice = price.multiply(buyPercentageCurrentPrice);
-	    			}
-	    			quantity = free2.divide(tradePrice, 2, RoundingMode.FLOOR);
-	        		status = Status.PROPOSE_BUY;
-	    		} else {
-	    			// Sell
-	    			if (lastOrder != null) {
-	    				tradePrice = lastOrder.getPrice().multiply(sellPercentage);
-	    			}
-	    			if (tradePrice == null || tradePrice.compareTo(price) < 0) {
-	    				tradePrice = price.multiply(sellPercentageCurrentPrice);
-	    			}
-	    			quantity = assetBalance1.getFree();
-	    			status = Status.PROPOSE_SELL;
-	    		}
-        		
-        }
 
-        model.addAttribute("status", status);
-        if (quantity != null) {
-        		model.addAttribute("quantity", Utils.formatQuantity(quantity));
+        
+        String errormsg = trader.proposeTradingAction(symbol, binanceClient, displayOrders, displayBalances, action);
+
+        if (action.getQuantity() != null) {
+        		pModel.addAttribute("quantity", Utils.formatQuantity(action.getQuantity()));
         }
-        if (tradePrice != null) {
-        		model.addAttribute("tradePrice", Utils.formatPrice(tradePrice, symbol, exchangeInfo));
+        if (action.getTradePrice() != null) {
+        		pModel.addAttribute("tradePrice", Utils.formatPrice(action.getTradePrice(), symbol, exchangeInfo));
+        }
+        pModel.addAttribute("symbol", symbol);
+        pModel.addAttribute("symbol1", symbol1);
+        pModel.addAttribute("symbol2", symbol2);
+        pModel.addAttribute("price", tickerPrice.getPrice());
+        pModel.addAttribute("status", action.getStatus());
+        pModel.addAttribute("orders", displayOrders);
+        pModel.addAttribute("balances", displayBalances);
+        pModel.addAttribute("task", schedulerTask);
+        if (errormsg != null) {
+            pModel.addAttribute("errormsg", errormsg);
         }
 
         return "trade";
     }
+
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
