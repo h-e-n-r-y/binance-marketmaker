@@ -1,10 +1,11 @@
 package de.hw4.binance.marketmaker.impl;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +18,10 @@ public class Utils {
 	
 	static Logger logger = LoggerFactory.getLogger(Utils.class);
 	
-	static DecimalFormat decFmt = new DecimalFormat("0.00000000");
-	static DecimalFormat priceFmt = new DecimalFormat("0.########");
-	static DecimalFormat qtyFmt = new DecimalFormat("0.00");
+	static DecimalFormatSymbols decSymbols = new DecimalFormatSymbols(Locale.US);
+	static DecimalFormat decFmt = new DecimalFormat("0.00000000", decSymbols);
+	static DecimalFormat priceFmt = new DecimalFormat("0.########", decSymbols);
+	static DecimalFormat qtyFmt = new DecimalFormat("0.00", decSymbols);
 	static {
 		decFmt.setParseBigDecimal(true);
 		priceFmt.setParseBigDecimal(true);
