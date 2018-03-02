@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,14 @@ public class Utils {
 
 	public static String formatQuantity(BigDecimal pQuantity) {
 		return qtyFmt.format(pQuantity);
+	}
+	
+	public static void sleep(long pMillis) {
+		try {
+			TimeUnit.MILLISECONDS.sleep(pMillis);
+		} catch (InterruptedException e) {
+		}
+
 	}
 
 }

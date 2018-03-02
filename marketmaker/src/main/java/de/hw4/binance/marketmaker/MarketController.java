@@ -3,6 +3,7 @@ package de.hw4.binance.marketmaker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,10 +127,16 @@ public class MarketController {
         if ("Cancel".equals(pCancelOrder)) {
         		// Cancel Order
         		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(symbol, Long.parseLong(pOrderID));
-        		binanceClient.cancelOrder(cancelOrderRequest);
+        		Utils.sleep(50); // prevent weird server time issues.
+        		try {
+        			binanceClient.cancelOrder(cancelOrderRequest);
+        		} catch (BinanceApiException bae) {
+        			pModel.addAttribute("errormsg", bae.getMessage());
+        		}
         }
         if ("Buy".equals(pCreateOrder)) {
         		NewOrder order = new NewOrder(symbol, OrderSide.BUY, OrderType.LIMIT, TimeInForce.GTC, pQuantity, pPriceLimit);
+        		Utils.sleep(50); // prevent weird server time issues.
         		try {
         			binanceClient.newOrder(order);
         		} catch (BinanceApiException bae) {
@@ -138,6 +145,7 @@ public class MarketController {
         }
         if ("Sell".equals(pCreateOrder)) {
         		NewOrder order = new NewOrder(symbol, OrderSide.SELL, OrderType.LIMIT, TimeInForce.GTC, pQuantity, pPriceLimit);
+        		Utils.sleep(50); // prevent weird server time issues.
         		try {
         			binanceClient.newOrder(order);
         		} catch (BinanceApiException bae) {

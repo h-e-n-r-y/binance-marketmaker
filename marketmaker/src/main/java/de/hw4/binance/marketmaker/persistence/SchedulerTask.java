@@ -21,11 +21,14 @@ public class SchedulerTask {
 	@Column
 	Boolean active;
 	
-	@Column
+	@Column(precision = 12, scale = 8)
 	BigDecimal currentOrderPrice;
 	
-	@Column
+	@Column(precision = 12, scale = 8)
 	BigDecimal currentOrderQty;
+	
+	@Column(length = 4)
+	String currentOrderSite;
 	
 	public SchedulerTask() {
 	}
@@ -74,6 +77,14 @@ public class SchedulerTask {
 
 	public void setCurrentOrderQty(BigDecimal currentOrderQty) {
 		this.currentOrderQty = currentOrderQty;
+	}
+
+	public String getCurrentOrderSite() {
+		return currentOrderSite;
+	}
+
+	public void setCurrentOrderSite(String currentOrderSite) {
+		this.currentOrderSite = currentOrderSite;
 	}
 
 
