@@ -54,7 +54,7 @@ public class Scheduler {
         		if (action.getTradePrice() != null) {
         			tradePriceLog = "@" + action.getTradePrice();
         		}
-        		log.info("Task ({}: {} {} @{})", task.getUser(), action.getTickerPrice(), action.getStatus(), tradePriceLog);
+        		log.info("Task ({}: {} {} {})", task.getUser(), action.getTickerPrice(), action.getStatus(), tradePriceLog);
         		
         		
             if (action.getStatus() == Status.PROPOSE_BUY || action.getStatus() == Status.PROPOSE_SELL) {
