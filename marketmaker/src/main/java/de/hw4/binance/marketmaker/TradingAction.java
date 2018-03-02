@@ -10,8 +10,18 @@ public class TradingAction {
 	
 	private BigDecimal tradePrice;
 	private BigDecimal quantity;
-	TickerPrice tickerPrice;
+	private TickerPrice tickerPrice;
+	private String errormsg;
 	
+	
+	public String getErrorMsg() {
+		return errormsg;
+	}
+
+	public void setErrorMsg(String errormsg) {
+		this.errormsg = errormsg;
+	}
+
 	public TradingAction(TickerPrice pTickerPrice) {
 		tickerPrice = pTickerPrice;
 		status = Status.UNKNOWN;

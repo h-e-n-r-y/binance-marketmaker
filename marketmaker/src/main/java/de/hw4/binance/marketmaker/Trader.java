@@ -10,9 +10,9 @@ import de.hw4.binance.marketmaker.persistence.SchedulerTask;
 
 public interface Trader {
 	
-	public Status trade(SchedulerTask pTask);
+	public TradingAction trade(SchedulerTask pTask);
 	
-	public String proposeTradingAction(String pSymbol, BinanceApiRestClient binanceClient, 
+	public void proposeTradingAction(BinanceApiRestClient binanceClient, 
 			List<OrderImpl> displayOrders, List<AssetBalanceImpl> displayBalances, TradingAction action);
 
 

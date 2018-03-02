@@ -2,6 +2,7 @@ package de.hw4.binance.marketmaker.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.binance.api.client.domain.OrderStatus;
 import com.binance.api.client.domain.account.AssetBalance;
 import com.binance.api.client.domain.account.Order;
 import com.binance.api.client.domain.account.request.AllOrdersRequest;
+import com.binance.api.client.domain.market.TickerPrice;
 import com.binance.api.client.exception.BinanceApiException;
 
 import de.hw4.binance.marketmaker.BinanceClientComponent;
@@ -39,23 +41,29 @@ public class TraderImpl implements Trader {
 	BinanceClientComponent clientFactory;
 
 	@Override
-	public Status trade(SchedulerTask pTask) {
+	public TradingAction trade(SchedulerTask pTask) {
 		String username = pTask.getUser();
-		clientFactory.getClient(username);
-		return Status.WAITING;
+		BinanceApiRestClient apiClient = clientFactory.getClient(username);
+		TickerPrice tickerPrice = apiClient.getPrice(pTask.getSymbol());
+		TradingAction action = new TradingAction(tickerPrice);
+		List<OrderImpl> displayOrders = new ArrayList<>();
+		List<AssetBalanceImpl> displayBalances = new ArrayList<>();
+		proposeTradingAction(apiClient, displayOrders, displayBalances, action);
+		
+		return action;
 	}
 	
 	
-	public String proposeTradingAction(String pSymbol, BinanceApiRestClient binanceClient, 
+	public void proposeTradingAction(BinanceApiRestClient binanceClient, 
 			List<OrderImpl> displayOrders, List<AssetBalanceImpl> displayBalances, TradingAction action) {
 		
-		
-        String symbol1 = Utils.getSymbol1(pSymbol);
-        String symbol2 = Utils.getSymbol2(pSymbol);
+		String symbol = action.getTickerPrice().getSymbol();
+        String symbol1 = Utils.getSymbol1(symbol);
+        String symbol2 = Utils.getSymbol2(symbol);
         String errormsg = null;
 
 		// Orders
-        AllOrdersRequest orderRequest = new AllOrdersRequest(pSymbol);
+        AllOrdersRequest orderRequest = new AllOrdersRequest(symbol);
         try {
         		List<Order> allOrders = binanceClient.getAllOrders(orderRequest);
         		for (Order order : allOrders) {
@@ -132,7 +140,10 @@ public class TraderImpl implements Trader {
 	    		}
 	    		action.setTradePrice(tradePrice);
         }
-		return errormsg;
+        if (errormsg != null) {
+        		action.setErrorMsg(errormsg);
+    			action.setStatus(Status.ERROR);
+        }
 	}
 
 

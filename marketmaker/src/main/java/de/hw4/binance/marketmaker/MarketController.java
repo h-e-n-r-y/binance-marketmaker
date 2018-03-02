@@ -1,8 +1,6 @@
 package de.hw4.binance.marketmaker;
 
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.OrderSide;
-import com.binance.api.client.domain.OrderStatus;
 import com.binance.api.client.domain.OrderType;
 import com.binance.api.client.domain.TimeInForce;
-import com.binance.api.client.domain.account.AssetBalance;
 import com.binance.api.client.domain.account.NewOrder;
-import com.binance.api.client.domain.account.Order;
-import com.binance.api.client.domain.account.request.AllOrdersRequest;
 import com.binance.api.client.domain.account.request.CancelOrderRequest;
 import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.domain.market.TickerPrice;
@@ -129,12 +123,12 @@ public class MarketController {
 
         ExchangeInfo exchangeInfo = binanceClient.getExchangeInfo();
         
-        if (pCancelOrder != null && pCancelOrder.equals("Cancel")) {
+        if ("Cancel".equals(pCancelOrder)) {
         		// Cancel Order
         		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(symbol, Long.parseLong(pOrderID));
         		binanceClient.cancelOrder(cancelOrderRequest);
         }
-        if (pCreateOrder != null && pCreateOrder.equals("Buy")) {
+        if ("Buy".equals(pCreateOrder)) {
         		NewOrder order = new NewOrder(symbol, OrderSide.BUY, OrderType.LIMIT, TimeInForce.GTC, pQuantity, pPriceLimit);
         		try {
         			binanceClient.newOrder(order);
@@ -142,7 +136,7 @@ public class MarketController {
         			pModel.addAttribute("errormsg", bae.getMessage());
         		}
         }
-        if (pCreateOrder != null && pCreateOrder.equals("Sell")) {
+        if ("Sell".equals(pCreateOrder)) {
         		NewOrder order = new NewOrder(symbol, OrderSide.SELL, OrderType.LIMIT, TimeInForce.GTC, pQuantity, pPriceLimit);
         		try {
         			binanceClient.newOrder(order);
@@ -159,7 +153,7 @@ public class MarketController {
         
 
         
-        String errormsg = trader.proposeTradingAction(symbol, binanceClient, displayOrders, displayBalances, action);
+        trader.proposeTradingAction(binanceClient, displayOrders, displayBalances, action);
 
         if (action.getQuantity() != null) {
         		pModel.addAttribute("quantity", Utils.formatQuantity(action.getQuantity()));
@@ -175,8 +169,8 @@ public class MarketController {
         pModel.addAttribute("orders", displayOrders);
         pModel.addAttribute("balances", displayBalances);
         pModel.addAttribute("task", schedulerTask);
-        if (errormsg != null) {
-            pModel.addAttribute("errormsg", errormsg);
+        if (action.getStatus() == Status.ERROR) {
+            pModel.addAttribute("errormsg", action.getErrorMsg());
         }
 
         return "trade";
