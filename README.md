@@ -29,3 +29,8 @@ Fill in api-key and secret.
 Access your Marketmaker at http://localhost:8080/
 
 First you must register a user with the same username, under which you installed your api-key.
+
+## Disclaimer
+
+The app has lots of bugs! These bugs may lead to major loss!
+Be careful to understand the sourcecode before using it for dealing with high amounts of coins!
