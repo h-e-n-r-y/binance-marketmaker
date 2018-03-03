@@ -16,7 +16,7 @@ import com.binance.api.client.domain.account.request.AllOrdersRequest;
 import com.binance.api.client.domain.market.TickerPrice;
 import com.binance.api.client.exception.BinanceApiException;
 
-import de.hw4.binance.marketmaker.BinanceClientComponent;
+import de.hw4.binance.marketmaker.BinanceClientFactory;
 import de.hw4.binance.marketmaker.Status;
 import de.hw4.binance.marketmaker.Trader;
 import de.hw4.binance.marketmaker.TradingAction;
@@ -38,7 +38,7 @@ public class TraderImpl implements Trader {
 
 	
 	@Autowired
-	BinanceClientComponent clientFactory;
+	BinanceClientFactory clientFactory;
 
 	@Override
 	public TradingAction trade(SchedulerTask pTask) {

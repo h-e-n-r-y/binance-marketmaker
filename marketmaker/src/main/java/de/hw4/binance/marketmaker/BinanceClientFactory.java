@@ -3,7 +3,7 @@ package de.hw4.binance.marketmaker;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.general.ExchangeInfo;
 
-public interface BinanceClientComponent {
+public interface BinanceClientFactory {
 	
 	/**
 	 * Return an ApiRestClient for the given pUsername.

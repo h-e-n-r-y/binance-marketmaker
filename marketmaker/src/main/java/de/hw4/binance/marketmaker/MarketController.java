@@ -3,7 +3,6 @@ package de.hw4.binance.marketmaker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.OrderSide;
 import com.binance.api.client.domain.OrderType;
 import com.binance.api.client.domain.TimeInForce;
+import com.binance.api.client.domain.account.CancelOrderResponse;
 import com.binance.api.client.domain.account.NewOrder;
 import com.binance.api.client.domain.account.request.CancelOrderRequest;
 import com.binance.api.client.domain.general.ExchangeInfo;
@@ -36,7 +36,7 @@ import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
 public class MarketController {
 	
 	@Autowired
-	BinanceClientComponent clientFactory;
+	BinanceClientFactory clientFactory;
 	
 	@Autowired
 	SchedulerTaskRepository schedulerTaskRepo;
@@ -127,9 +127,9 @@ public class MarketController {
         if ("Cancel".equals(pCancelOrder)) {
         		// Cancel Order
         		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(symbol, Long.parseLong(pOrderID));
-        		Utils.sleep(50); // prevent weird server time issues.
         		try {
-        			binanceClient.cancelOrder(cancelOrderRequest);
+        			CancelOrderResponse cancelOrderResponse = binanceClient.cancelOrder(cancelOrderRequest);
+        			logger.info(cancelOrderResponse.toString());
         		} catch (BinanceApiException bae) {
         			pModel.addAttribute("errormsg", bae.getMessage());
         		}

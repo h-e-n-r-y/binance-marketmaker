@@ -13,10 +13,10 @@ import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.general.ExchangeInfo;
 
-import de.hw4.binance.marketmaker.BinanceClientComponent;
+import de.hw4.binance.marketmaker.BinanceClientFactory;
 
 @Component
-public class BinanceClientComponentImpl implements BinanceClientComponent {
+public class BinanceClientComponentImpl implements BinanceClientFactory {
 
 	private Map<String, BinanceApiRestClient> binanceClients;
 

@@ -39,7 +39,7 @@ import de.hw4.binance.marketmaker.impl.Utils;
 public class BalancesController {
 	
 	@Autowired
-	BinanceClientComponent clientFactory;
+	BinanceClientFactory clientFactory;
 	
 	static Logger logger = LoggerFactory.getLogger(BalancesController.class);
 
