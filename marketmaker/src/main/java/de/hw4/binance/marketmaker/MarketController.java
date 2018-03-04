@@ -153,13 +153,18 @@ public class MarketController {
         
         if ("Cancel".equals(pCancelOrder)) {
         		// Cancel Order
-        		CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(symbol, Long.parseLong(pOrderID));
         		try {
+        			logger.info("Cancel Order {} {}", symbol, pOrderID);
+        			CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(symbol, Long.parseLong(pOrderID));
         			CancelOrderResponse cancelOrderResponse = binanceClient.cancelOrder(cancelOrderRequest);
         			logger.info(cancelOrderResponse.toString());
         		} catch (BinanceApiException bae) {
         			logger.error(bae.getMessage(), bae);
         			pModel.addAttribute("errormsg", bae.getMessage());
+        		} catch (NumberFormatException nfe) {
+        			logger.error(nfe.getMessage(), nfe);
+        		} catch (Throwable t) {
+        			logger.error(t.getMessage(), t);
         		}
         }
         if ("Buy".equals(pCreateOrder)) {
@@ -191,7 +196,7 @@ public class MarketController {
         
 
         
-        trader.proposeTradingAction(binanceClient, displayOrders, displayBalances, action);
+        trader.proposeTradingAction(binanceClient, userName, displayOrders, displayBalances, action);
 
         if (action.getQuantity() != null) {
         		pModel.addAttribute("quantity", Utils.formatQuantity(action.getQuantity()));
