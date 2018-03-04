@@ -42,7 +42,7 @@ public class Scheduler {
     Trader trader;
 
     @Scheduled(fixedRate = 10000)
-    public void reportCurrentTime() {
+    public void run() {
         
         List<SchedulerTask> activeTasks = tasksRepo.findByActive(true);
         if (activeTasks.isEmpty()) {

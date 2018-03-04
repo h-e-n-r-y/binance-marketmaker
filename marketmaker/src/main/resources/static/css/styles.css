@@ -29,7 +29,15 @@ div.navigation ul li a:hover {
 #nav_wrapper ul {
 	width: 100%;
 }
-
+#ticker {
+	margin-bottom: 1em
+}
+div#ticker.price.green {
+	color: green;
+}
+div#ticker.price.red {
+	color: red;
+}
 p.status.waiting {
 	color: blue;
 }
@@ -155,4 +163,8 @@ h3 {
 
 h3 form {
 	float: right;
+}
+
+#winbuy,#winsell {
+	width: 500px;
 }

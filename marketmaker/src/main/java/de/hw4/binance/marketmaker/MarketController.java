@@ -1,6 +1,8 @@
 package de.hw4.binance.marketmaker;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,12 +48,16 @@ public class MarketController {
 		
 	
 	static Logger logger = LoggerFactory.getLogger(MarketController.class);
+    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100.0);
+
 
 	@RequestMapping(value = "/task", method = RequestMethod.POST)
     public String handleTask(
     		@RequestParam(value="symbol", required=true) String pSymbol,
     		// activate the task
     		@RequestParam(value="activateTask", required=false) String pActivateTask, 
+    		@RequestParam(value="winbuy", required=false) String pBuyPercentage,
+    		@RequestParam(value="winsell", required=false) String pSellPercentage,
     		// remove a task
     		@RequestParam(value="removeTask", required=false) String pRemoveTask, 
 
@@ -74,6 +80,10 @@ public class MarketController {
             }
         }
 		if ("Activate".equals(pActivateTask)) {
+			BigDecimal bp = Utils.parseDecimal(pBuyPercentage);
+			schedulerTask.setBuyPercentage(bp.divide(HUNDRED, 8, RoundingMode.HALF_EVEN));
+			BigDecimal sp = Utils.parseDecimal(pSellPercentage);
+			schedulerTask.setSellPercentage(sp.divide(HUNDRED, 8, RoundingMode.HALF_EVEN));
 			schedulerTask.activate();
 			schedulerTaskRepo.save(schedulerTask);
 		}
@@ -83,7 +93,7 @@ public class MarketController {
 			schedulerTaskRepo.save(schedulerTask);
 		}
 		model.addAttribute("task", schedulerTask);
-		return trade(pSymbol, null, null, null, null, null, null, model);
+		return trade(pSymbol, null, null, null, null, null, null, pBuyPercentage, pSellPercentage, model);
 	}
 
 	@RequestMapping(value = "/trade", method = RequestMethod.POST)
@@ -97,6 +107,10 @@ public class MarketController {
     		@RequestParam(value="side", required=false) String pSide,
     		@RequestParam(value="quantity", required=false) String pQuantity,
     		@RequestParam(value="pricelimit", required=false) String pPriceLimit,
+    		//adjust percentages
+    		@RequestParam(value="winbuy", required=false) String pBuyPercentage,
+    		@RequestParam(value="winsell", required=false) String pSellPercentage,
+
     		
     		Model pModel) {
 		
@@ -116,11 +130,24 @@ public class MarketController {
             return "error";
         }
         
+        BigDecimal bp = null;
+        BigDecimal sp = null;
         SchedulerTask schedulerTask = schedulerTaskRepo.findOne(SchedulerTask.hash(userName, symbol));
         if (schedulerTask == null) {
         		schedulerTask = new SchedulerTask(userName, symbol);
-        		schedulerTaskRepo.save(schedulerTask);
+        } else {
+        		bp = schedulerTask.getBuyPercentage();
+        		sp = schedulerTask.getSellPercentage();
         }
+        if (pBuyPercentage != null) {
+        		bp = Utils.parseDecimal(pBuyPercentage).divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
+        		schedulerTask.setBuyPercentage(bp);
+        }
+        if (pSellPercentage != null) {
+        		sp = Utils.parseDecimal(pSellPercentage).divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
+        		schedulerTask.setSellPercentage(sp);
+        }
+        schedulerTaskRepo.save(schedulerTask);
 
         ExchangeInfo exchangeInfo = binanceClient.getExchangeInfo();
         
@@ -131,6 +158,7 @@ public class MarketController {
         			CancelOrderResponse cancelOrderResponse = binanceClient.cancelOrder(cancelOrderRequest);
         			logger.info(cancelOrderResponse.toString());
         		} catch (BinanceApiException bae) {
+        			logger.error(bae.getMessage(), bae);
         			pModel.addAttribute("errormsg", bae.getMessage());
         		}
         }
@@ -140,6 +168,7 @@ public class MarketController {
         		try {
         			binanceClient.newOrder(order);
         		} catch (BinanceApiException bae) {
+        			logger.error(bae.getMessage(), bae);
         			pModel.addAttribute("errormsg", bae.getMessage());
         		}
         }
@@ -150,6 +179,7 @@ public class MarketController {
         			binanceClient.newOrder(order);
         		} catch (BinanceApiException bae) {
         			pModel.addAttribute("errormsg", bae.getMessage());
+        			logger.error(bae.getMessage(), bae);
         		}
         }
 
@@ -172,10 +202,18 @@ public class MarketController {
         pModel.addAttribute("symbol", symbol);
         pModel.addAttribute("symbol1", symbol1);
         pModel.addAttribute("symbol2", symbol2);
+        if (bp != null) {
+        		pModel.addAttribute("winbuy", bp.multiply(HUNDRED));
+        }
+        if (sp != null) {
+	        	pModel.addAttribute("winsell", sp.multiply(HUNDRED));
+        }
         pModel.addAttribute("price", tickerPrice.getPrice());
         pModel.addAttribute("status", action.getStatus());
         pModel.addAttribute("orders", displayOrders);
         pModel.addAttribute("balances", displayBalances);
+        pModel.addAttribute("qty1", displayBalances.get(0).getFree());
+        pModel.addAttribute("qty2", displayBalances.get(1).getFree());
         pModel.addAttribute("task", schedulerTask);
         if (action.getStatus() == Status.ERROR) {
             pModel.addAttribute("errormsg", action.getErrorMsg());

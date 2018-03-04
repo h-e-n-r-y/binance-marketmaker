@@ -86,12 +86,13 @@ public class TraderImpl implements Trader {
 			if (symbol1.equals(asset) ||
         				symbol2.equals(asset)) {
         			AssetBalanceImpl assetBalance = new AssetBalanceImpl(bal, action.getTickerPrice());
-				displayBalances.add(assetBalance);
 				
 				if (symbol1.equals(asset)) {
 					assetBalance1 = assetBalance;
+					displayBalances.add(0, assetBalance);
 				} else {
 					assetBalance2 = assetBalance;
+					displayBalances.add(assetBalance);
 				}
         		}
         }

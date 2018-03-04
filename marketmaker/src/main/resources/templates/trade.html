@@ -1,21 +1,27 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>MarketMaker</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-</head>
+<head th:replace="include/navigation :: head (pageTitle='Trade')"/>
 <body>
 	<div th:replace="include/navigation :: topnavi"></div>
 
     <h3>Marketprice</h3>
-    <p class="price" th:text="${symbol} + ': ' + ${price}" />
-    <form method="post" style="float:left"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
-    <input type="hidden" name="symbol" th:value="${symbol}"/>
-    <input type="submit" class="refresh" name="Refresh" value="Refresh"/>
-    </form>
+    <div id="ticker" class="price"><span th:text="${symbol}"/>: <span id="tickerprice" th:text="${price}" /></div>
+ 
+    <h3>Automate</h3>
     <form method="post" action="/task"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+	<div class="sliders">
+	<div class="sliderbuy">
+	<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <br/>
+    <input type="range" id="winbuy" name="winbuy" min="0" max="1000" th:value="${winbuy}"/>
+    </div>
+    <div class="slidersell"> 
+    	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
+    <input type="range" id="winsell" name="winsell" min="0" max="1000" th:value="${winsell}"/>
+    </div>  
+	</div>
+
     <input type="hidden" name="symbol" th:value="${symbol}"/>
+	<input type="submit" class="refresh" name="Refresh" value="Refresh"/>
     <input th:if="${task}" type="submit" name="activateTask" th:class="${task.active} ? 'deactivate' : 'activate'" th:value="${task.active} ? 'Deactivate' : 'Activate'"/>
     </form>
 
@@ -76,4 +82,26 @@
       </tr>
     </table>
 </body>
+<script id="tickerscript" th:inline="javascript">
+/*<![CDATA[*/
+
+	var symbol = /*[[${symbol}]]*/;
+	var price = /*[[${price}]]*/;
+	var qty1 = /*[[${qty1}]]*/;
+	var qty2 = /*[[${qty2}]]*/;
+
+/*]]>*/
+</script>
+<script th:inline="javascript">
+	var qty1 = /*[[${qty1}]]*/;
+	var qty2 = /*[[${qty2}]]*/;
+	var symbol1 = /*[[${symbol1}]]*/;
+	var symbol2 = /*[[${symbol2}]]*/;
+	var status = /*[[${status.name}]]*/;
+	setInterval(tradetick, 2000);
+	
+	$(document).ready(function() {
+	    initSliders();
+	});
+</script>
 </html>

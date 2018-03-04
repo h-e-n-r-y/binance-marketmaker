@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Price</title>
+<head th:fragment="head">
+    <title th:text="'MarketMaker - ' + ${pageTitle}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/styles.css"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"/>
+    <script src="/js/scripts.js"/>
 </head>
 <body>
 	<div th:fragment="topnavi" class="navigation">

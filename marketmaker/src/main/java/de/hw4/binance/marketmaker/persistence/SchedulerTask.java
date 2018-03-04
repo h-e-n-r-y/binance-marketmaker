@@ -6,6 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Represents an aktive (or inactive) Task for Trading in the Background.
+ * {@link de.hw4.binance.marketmaker.impl.Scheduler} picks up all tasks for a 
+ * {@link de.hw4.binance.marketmaker.persistence.User} and  lets 
+ * {@link de.hw4.binance.marketmaker.Trader} propose the action to perform.
+ * 
+ * @author henry
+ *
+ */
 @Entity
 public class SchedulerTask {
 	
@@ -29,6 +38,12 @@ public class SchedulerTask {
 	
 	@Column(length = 4)
 	String currentOrderSite;
+	
+	@Column(precision = 12, scale = 8)
+	BigDecimal buyPercentage;
+	
+	@Column(precision = 12, scale = 8)
+	BigDecimal sellPercentage;
 	
 	public SchedulerTask() {
 	}
@@ -85,6 +100,30 @@ public class SchedulerTask {
 
 	public void setCurrentOrderSite(String currentOrderSite) {
 		this.currentOrderSite = currentOrderSite;
+	}
+
+	public String getMarketSymbol() {
+		return marketSymbol;
+	}
+
+	public void setMarketSymbol(String marketSymbol) {
+		this.marketSymbol = marketSymbol;
+	}
+
+	public BigDecimal getBuyPercentage() {
+		return buyPercentage;
+	}
+
+	public void setBuyPercentage(BigDecimal buyPercentage) {
+		this.buyPercentage = buyPercentage;
+	}
+
+	public BigDecimal getSellPercentage() {
+		return sellPercentage;
+	}
+
+	public void setSellPercentage(BigDecimal sellPercentage) {
+		this.sellPercentage = sellPercentage;
 	}
 
 

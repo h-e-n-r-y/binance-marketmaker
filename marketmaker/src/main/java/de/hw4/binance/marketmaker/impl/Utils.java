@@ -27,6 +27,7 @@ public class Utils {
 		decFmt.setParseBigDecimal(true);
 		priceFmt.setParseBigDecimal(true);
 		qtyFmt.setParseBigDecimal(true);
+		qtyFmt.setRoundingMode(RoundingMode.DOWN);
 	}
 
 	private Utils(){		
@@ -68,6 +69,9 @@ public class Utils {
 	}
 
 	public static String formatDecimal(BigDecimal pDecimal) {
+		if (pDecimal == null) {
+			return "null";
+		}
 		return decFmt.format(pDecimal);
 	}
 
@@ -90,6 +94,9 @@ public class Utils {
 	}
 
 	public static String formatQuantity(BigDecimal pQuantity) {
+		if (pQuantity == null) {
+			return "null";
+		}
 		return qtyFmt.format(pQuantity);
 	}
 	
