@@ -12,7 +12,7 @@ public interface Trader {
 	
 	public TradingAction trade(SchedulerTask pTask);
 	
-	public void proposeTradingAction(BinanceApiRestClient binanceClient, 
+	public void proposeTradingAction(BinanceApiRestClient binanceClient, String pUser,
 			List<OrderImpl> displayOrders, List<AssetBalanceImpl> displayBalances, TradingAction action);
 
 

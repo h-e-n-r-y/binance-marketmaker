@@ -1,8 +1,6 @@
 package de.hw4.binance.marketmaker;
 
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,22 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.binance.api.client.BinanceApiRestClient;
-import com.binance.api.client.domain.OrderSide;
-import com.binance.api.client.domain.OrderStatus;
-import com.binance.api.client.domain.OrderType;
-import com.binance.api.client.domain.TimeInForce;
 import com.binance.api.client.domain.account.AssetBalance;
-import com.binance.api.client.domain.account.NewOrder;
-import com.binance.api.client.domain.account.Order;
-import com.binance.api.client.domain.account.request.AllOrdersRequest;
-import com.binance.api.client.domain.account.request.CancelOrderRequest;
-import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.domain.market.TickerPrice;
 import com.binance.api.client.exception.BinanceApiException;
 
 import de.hw4.binance.marketmaker.impl.AssetBalanceImpl;
-import de.hw4.binance.marketmaker.impl.OrderImpl;
-import de.hw4.binance.marketmaker.impl.Utils;
 
 @Controller
 public class BalancesController {
