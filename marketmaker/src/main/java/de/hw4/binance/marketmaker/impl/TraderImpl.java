@@ -126,9 +126,11 @@ public class TraderImpl implements Trader {
 	    			// BUY
 	    			BigDecimal percentageFactorPrice = ONE.subtract(BUY_PERCENTAGE_CURRENTPRICE);
 	    			if (lastOrder != null) {
-	    				BigDecimal buyPercentage = schedulerTask.getBuyPercentage().divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
+	    				BigDecimal buyPercentage = schedulerTask.getBuyPercentage();
 	    				if (buyPercentage == null) {
 	    					buyPercentage = BUY_PERCENTAGE_DEFAULT;
+	    				} else {
+	    					buyPercentage = buyPercentage.divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
 	    				}
 	    				BigDecimal percentageFactor = ONE.subtract(buyPercentage); 
 	    				tradePrice =  free2.divide(lastOrder.getOrigQty(), 8, RoundingMode.HALF_DOWN).multiply(percentageFactor);
@@ -147,9 +149,11 @@ public class TraderImpl implements Trader {
 	    			// Sell
 	    			BigDecimal percentageFactorPrice = ONE.add(SELL_PERCENTAGE_CURRENTPRICE);
 	    			if (lastOrder != null) {
-	    				BigDecimal sellPercentage = schedulerTask.getSellPercentage().divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
+	    				BigDecimal sellPercentage = schedulerTask.getSellPercentage();
 	    				if (sellPercentage == null) {
 	    					sellPercentage = SELL_PERCENTAGE_DEFAULT;
+	    				} else {
+	    					sellPercentage = sellPercentage.divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
 	    				}
 	    				BigDecimal percentageFactor = ONE.add(sellPercentage); 
 	    				tradePrice = lastOrder.getPrice().multiply(percentageFactor);
