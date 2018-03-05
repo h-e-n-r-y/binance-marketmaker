@@ -17,6 +17,7 @@
 	<p th:if="${message}" th:text="${message}">
 	    Invalid username and password.
 	</p>
+	<p th:if="${error == 'Forbidden'}"><a href="/login">Try again.</a></p>
 	</div>
 </body>
 </html>
