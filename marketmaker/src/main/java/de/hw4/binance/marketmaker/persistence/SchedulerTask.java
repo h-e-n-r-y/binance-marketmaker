@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import de.hw4.binance.marketmaker.impl.Utils;
+
 /**
  * Represents an aktive (or inactive) Task for Trading in the Background.
  * {@link de.hw4.binance.marketmaker.impl.Scheduler} picks up all tasks for a 
@@ -76,6 +78,14 @@ public class SchedulerTask {
 	
 	public String getSymbol() {
 		return marketSymbol;
+	}
+
+	public String getSymbol1() {
+		return Utils.getSymbol1(marketSymbol);
+	}
+
+	public String getSymbol2() {
+		return Utils.getSymbol2(marketSymbol);
 	}
 
 	public BigDecimal getCurrentOrderPrice() {

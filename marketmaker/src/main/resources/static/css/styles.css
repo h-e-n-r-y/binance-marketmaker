@@ -29,8 +29,17 @@ div.navigation ul li a:hover {
 #nav_wrapper ul {
 	width: 100%;
 }
+#symbolcontainer {
+	width: 280px;
+}
+#symbolcontainer img {
+	float: left;
+}
 #ticker {
-	margin-bottom: 1em
+	padding: 0.5em;
+}
+#symbol {
+	padding-left: 20px;
 }
 div#ticker.price.green {
 	color: green;

@@ -40,4 +40,8 @@ Be careful to understand the sourcecode before using it for dealing with high am
 
 I appreciate comments, bugreports and suggestions for further development...
 
+## Thanks
+
+Thanks, Christopher Downer, for sharing the coin icons. Check out his project here: https://github.com/cjdowner/cryptocurrency-icons
+
 Henry
