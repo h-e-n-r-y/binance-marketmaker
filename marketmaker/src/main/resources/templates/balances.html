@@ -15,7 +15,7 @@
         <th>Symbol</th>
         <th>free</th>
         <th>locked</th>
-        <th th:text="'value (' + ${symbol2} + ')'"></th>
+        <th th:text="'Value (' + ${symbol2} + ')'"></th>
       </tr>
       <tr th:each="balance : ${balances}">
       	<td><img th:src="${'/img/icon/' + balance.asset + '.png'}" /></td>
