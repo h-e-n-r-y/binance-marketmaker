@@ -40,7 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// for h2 console
 		http.authorizeRequests().antMatchers("/console/**").hasRole("SA_ROLE");
-		http.csrf().ignoringAntMatchers("/console/**");
+		http.csrf()
+        .ignoringAntMatchers("/console/**")
+        .ignoringAntMatchers("/nice*")
+        //.ignoringAntMatchers("/VAADIN*")
+        .ignoringAntMatchers("/vaadinServlet/**");
 		http.headers().frameOptions().disable();
 	}
 

@@ -1,0 +1,234 @@
+// Global variable overrides. Must be declared before importing Valo.
+// Defines the plaintext font size, weight and family. Font size affects general component sizing.
+//$v-font-size: 16px;
+//$v-font-weight: 300;
+//$v-font-family: "Open Sans", sans-serif;
+// Defines the border used by all components.
+//$v-border: 1px solid (v-shade 0.7);
+//$v-border-radius: 4px;
+// Affects the color of some component elements, e.g Button, Panel title, etc
+//$v-background-color: hsl(210, 0%, 98%);
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+//$v-app-background-color: $v-background-color;
+// Affects the visual appearance of all components
+//$v-gradient: v-linear 8%;
+//$v-bevel-depth: 30%;
+//$v-shadow-opacity: 5%;
+// Defines colors for indicating status (focus, success, failure)
+//$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+//$v-friendly-color: #2c9720;
+//$v-error-indicator-color: #ed473b;
+// For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+// Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+@import "../valo/valo.scss";
+
+//@import "fonts.scss";
+
+@mixin mytheme {
+  @include valo;
+
+  .v-checkbox-configs-changed {
+    margin-top: 10px;
+  }
+  .v-label-help-instruction-label {
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    font-size: 15px;
+    color: #e93313;
+  }
+  .v-label-diff-label {
+    margin-top: 100px;
+    margin-left: 150px;
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    font-size: 45px;
+    color: #266782;
+  }
+  .v-label-diff-label span {
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    font-size: 30px;
+    color: #e93313;
+  }
+  .v-label-help-instruction-label span {
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    font-size: 20px;
+    color: #266782;
+  }
+  .v-label-headline-label {
+    font-family: "LTSyntax OsF Regular";
+    font-size: 30px;
+    color: #e93313;
+  }
+  .v-label-headline-label span {
+    font-family: "LTSyntax OsF Regular";
+    font-size: 30px;
+    font-weight: bold;
+    color: #e93313;
+  }
+  .diff-select {
+    margin-top: 10px;
+  }
+
+  .v-label-title-release-helper {
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    font-size: 40px;
+    color: #266782;
+  }
+
+  .v-label-help-label {
+    font-family: "LTSyntax OsF Regular";
+    font-size: 25px;
+    color: #266782;
+    font-weight: bold;
+  }
+  .v-label-seperator-label {
+    font-family: "LTSyntax OsF Regular";
+    font-size: 20px;
+    font-weight: bold;
+    color: #266782;
+    margin-top: 20px;
+  }
+  .v-label-seperator-label span {
+
+    color: #e93313;
+  }
+  .v-button {
+    font-family: "LTSyntax OsF Regular";
+    margin-top: 10px;
+  }
+  .v-button-email-button {
+    background: #266782;
+    color: white;
+    border: none;
+  }
+  .v-textarea-textarea-email {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+  .v-textfield {
+    margin-top: 10px;
+    font-family: "LTSyntax OsF Regular";
+  }
+  .v-tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .v-filterselect {
+    margin-top: 10px;
+    font-family: "LTSyntax OsF Regular";
+  }
+  .v-button-caption, .v-captiontext {
+    font-family: "LTSyntax OsF Regular";
+  }
+
+  .v-tabsheet-tabitemcell .v-caption:hover {
+    -webkit-transform: scale(1.1);
+  }
+  .v-tabsheet-tabitemcell-release-tab .v-caption {
+    color: #e93313;
+  }
+  .v-tabsheet-tabitemcell-release-tab .v-caption:hover {
+    color: #e93313;
+
+  }
+  .v-button-save-btn {
+    margin-left: 10px;
+    background: darkgreen;
+    color: white;
+    border: none;
+  }
+
+  .v-button-remove-btn {
+    margin-left: 10px;
+    background: #e93313;
+    color: white;
+    border: none;
+  }
+  .v-button-remove-btn-disp {
+    margin-left: 2px;
+    margin-right: 10px;
+    background: #e93313;
+    color: white;
+    border: none;
+  }
+/*  .v-ui {
+    @include background(linear-gradient(to right, #ff5f6d, #ffc371)); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!
+
+    width: 100%;
+    height: 100%;
+
+  }*/
+  .v-label-welcome-label {
+    font-family: "LTSyntax OsF Regular";
+    font-size: 50px;
+    font-weight: bold;
+    color: #266782;
+    margin-top: 200px;
+    margin-left: 350px;
+
+  }
+  .v-label-welcome-label span {
+    font-family: "LTSyntax OsF Regular";
+    font-size: 70px;
+    font-weight: bold;
+    color: #266782;
+    margin-top: 200px;
+    margin-left: 400px;
+  }
+  .no-toolbar-top .gwt-RichTextToolbar-top {
+    display: none;
+  }
+  .no-toolbar-top .gwt-RichTextArea {
+    background: black;
+  }
+  .v-label-label-pwdescriptor {
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+  }
+  .v-formlayout-password-form {
+    background: #266782;
+  }
+
+  .no-toolbar-bottom .gwt-RichTextToolbar-bottom {
+    display: none;
+  }
+  .no-toolbar-diff-top .gwt-RichTextToolbar-top {
+    display: none;
+  }
+  .no-toolbar-diff-bottom .gwt-RichTextToolbar-bottom {
+    display: none;
+  }
+  .v-textarea-git-update-area {
+    font-size: 20px;
+    font-family: "LTSyntax OsF Regular";
+    font-weight: bold;
+    color: #e93313;
+    margin-left: 10px;
+
+  }
+
+  .v-button-chat-btn {
+    margin-left: 5px;
+    margin-bottom: 5px;
+  }
+  .v-textfield-chat-field {
+    margin-bottom: 5px;
+  }
+  .v-button-feedback-btn {
+    background: #e93313;
+    color: white;
+    margin-top: 20px;
+    margin-left: 50px;
+    font-family: "LTSyntax OsF Regular";
+    font-size: 20px;
+  }
+  // Insert your own theme rules here
+}
+
