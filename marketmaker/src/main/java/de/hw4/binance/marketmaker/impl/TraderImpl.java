@@ -51,7 +51,7 @@ public class TraderImpl implements Trader {
 	public TradingAction trade(SchedulerTask pTask) {
 		String username = pTask.getUser();
 		BinanceApiRestClient apiClient = clientFactory.getClient(username);
-		TickerPrice tickerPrice = apiClient.getPrice(pTask.getSymbol());
+		TickerPrice tickerPrice = apiClient.getPrice(pTask.getMarketSymbol());
 		TradingAction action = new TradingAction(tickerPrice);
 		List<OrderImpl> displayOrders = new ArrayList<>();
 		List<AssetBalanceImpl> displayBalances = new ArrayList<>();

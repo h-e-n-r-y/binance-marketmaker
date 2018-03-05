@@ -214,6 +214,8 @@ public class MarketController {
 	        	pModel.addAttribute("winsell", sp.multiply(HUNDRED));
         }
         pModel.addAttribute("price", Utils.parseDecimal(tickerPrice.getPrice()));
+        pModel.addAttribute("symbols", new String[]{symbol});
+        pModel.addAttribute("prices", new String[]{tickerPrice.getPrice()});
         pModel.addAttribute("status", action.getStatus());
         pModel.addAttribute("orders", displayOrders);
         pModel.addAttribute("balances", displayBalances);
@@ -236,6 +238,11 @@ public class MarketController {
         		return "redirect:/console";
         }
         List<SchedulerTask> schedulerTasks = schedulerTaskRepo.findByUser(userName);
+        List<String> symbols = new ArrayList<>();
+        for (SchedulerTask t : schedulerTasks) {
+        		symbols.add(t.getMarketSymbol());
+        }
+        model.addAttribute("symbols", symbols);
         model.addAttribute("activeTasks", schedulerTasks);
 		return "index";
 	}

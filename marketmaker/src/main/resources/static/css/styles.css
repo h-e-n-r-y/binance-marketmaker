@@ -47,6 +47,12 @@ div#ticker.price.green {
 div#ticker.price.red {
 	color: red;
 }
+td.number.green {
+	color: green;
+}
+td.number.red {
+	color: red;
+}
 p.status.waiting {
 	color: blue;
 }

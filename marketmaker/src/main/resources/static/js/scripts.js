@@ -1,20 +1,40 @@
 function tradetick() {
-	$.get( "/ticker.js?symbol=" + symbol, function( data, textStatus, jqxhr ) {
+	$.get( "/ticker.js?symbols=" + symbols, function( data, textStatus, jqxhr ) {
 		  $("#tickerscript").replaceWith(data);
 		  
 	});
-	console.log(symbol + ": " + price);
+	console.log(symbols[0] + ": " + prices[0]);
 	var oldPrice = $("#tickerprice").text();
-	if (oldPrice > price) {
+	if (oldPrice > prices[0]) {
 		$("#ticker").addClass("red")
 		$("#ticker").removeClass("green")
 	}
-	if (oldPrice < price) {
+	if (oldPrice < prices[0]) {
 		$("#ticker").addClass("green")
 		$("#ticker").removeClass("red")
 	}
-	$("#tickerprice").text(price);
+	$("#tickerprice").text(prices[0]);
 }
+
+function indextick() {
+	$.get( "/ticker.js?symbols=" + symbols, function( data, textStatus, jqxhr ) {
+		  $("#tickerscript").replaceWith(data);
+	});
+	console.log(symbols + ": " + prices);
+	for (let i in symbols) {
+		var oldPrice = $("#price" + symbols[i]).text();
+		if (oldPrice > prices[i]) {
+			$("#price" + symbols[i]).addClass("red")
+			$("#price" + symbols[i]).removeClass("green")
+		}
+		if (oldPrice < prices[i]) {
+			$("#price" + symbols[i]).addClass("green")
+			$("#price" + symbols[i]).removeClass("red")
+		}
+		$("#price" + symbols[i]).text(prices[i]);
+	}	
+}
+
 
 var nrNotifications = 0;
 function getNotifications() {
@@ -70,4 +90,8 @@ function initSliders() {
 		    output2.innerHTML = winsell;
 		}
 	}
+}
+
+function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
 }

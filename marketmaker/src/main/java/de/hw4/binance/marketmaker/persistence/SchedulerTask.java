@@ -76,10 +76,6 @@ public class SchedulerTask {
 		return Long.valueOf(userName.hashCode()) * 31L + symbol.hashCode();
 	}
 	
-	public String getSymbol() {
-		return marketSymbol;
-	}
-
 	public String getSymbol1() {
 		return Utils.getSymbol1(marketSymbol);
 	}
