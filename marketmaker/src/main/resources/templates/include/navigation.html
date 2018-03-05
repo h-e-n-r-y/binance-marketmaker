@@ -21,7 +21,22 @@
         </form></li>
 	<li class="right" th:if="${#httpServletRequest.remoteUser}"><a href="/account" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
 	</ul>
-	</div></div>
+	</div>
+	
+	<script th:inline="javascript" id="notificationscript">
+
+      /*<![CDATA[*/
+	var lastupdate = new Date().getTime();
+	var nrNotifications = 0;
+	/*]]>*/
+	</script>
+	<script th:inline="javascript">
+	
+	$(document).ready(function() {
+		setInterval(getNotifications, 10000);
+	});
+	</script> 
+	</div>
 
 </body>
 </html>

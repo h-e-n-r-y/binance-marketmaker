@@ -16,6 +16,34 @@ function tradetick() {
 	$("#tickerprice").text(price);
 }
 
+var nrNotifications = 0;
+function getNotifications() {
+	$.get( "/notifications.js?since=" + lastupdate, function( data, textStatus, jqxhr ) {
+		  $("#notificationscript").replaceWith(data);
+		  
+	});
+	if ( nrNotifications > 0 ) {
+		if(window.Notification && Notification.permission !== "denied") {
+			for (i = 0; i<nrNotifications; i++) {
+				var t = notification.title[i];
+				var m = notification.message[i];
+				Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
+					var n = new Notification(t, { 
+						body: m,
+						icon: '/path/to/icon.png' // optional
+					}); 
+				});
+			}
+		}
+	}
+}
+
+if(window.Notification && Notification.permission !== "denied") {
+	Notification.requestPermission(function(status) {
+		console.log("notifications allowed.");
+		});
+}
+
 function initSliders() {
 
 	var slider1 = document.getElementById("winbuy");

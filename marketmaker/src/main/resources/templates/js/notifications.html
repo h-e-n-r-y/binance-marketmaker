@@ -1,0 +1,11 @@
+<script th:inline="javascript" id="notificationscript">
+
+      /*<![CDATA[*/
+		var notification = new Object();
+		notification.title = [[${title}]];
+		notification.message = [[${message}]];
+
+		var nrNotifications = [[${notificationcount}]];
+		var lastupdate = new Date().getTime();
+	/*]]>*/
+</script> 
