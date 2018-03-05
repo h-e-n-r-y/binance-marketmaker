@@ -63,6 +63,7 @@
         <th th:text="'Amount (' + ${symbol2} + ')'">Amount2</th>
         <th>Filled</th>
         <th>Price</th>
+        <th th:text="'Value (' + ${symbol2} + ')'">Value</th>
         <th>Status</th>
         <th>Action</th>
       </tr>
@@ -76,6 +77,7 @@
         <td class="number" th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
         <td class="number" th:text="${#numbers.formatDecimal(order.executedQty,1,2)}">2.414343</td>
         <td class="number" th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(price * order.origQty ,1,8)}">2.414343</td>
         <td th:text="${order.status}">FILLED</td>
         <td><input th:if="${order.canCancel}" type="submit" value="Cancel" name="cancelOrder"/></td>
         </form>

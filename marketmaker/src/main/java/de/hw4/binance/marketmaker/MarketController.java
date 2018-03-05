@@ -213,7 +213,7 @@ public class MarketController {
         if (sp != null) {
 	        	pModel.addAttribute("winsell", sp.multiply(HUNDRED));
         }
-        pModel.addAttribute("price", tickerPrice.getPrice());
+        pModel.addAttribute("price", Utils.parseDecimal(tickerPrice.getPrice()));
         pModel.addAttribute("status", action.getStatus());
         pModel.addAttribute("orders", displayOrders);
         pModel.addAttribute("balances", displayBalances);
