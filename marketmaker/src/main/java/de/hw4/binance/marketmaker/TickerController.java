@@ -28,6 +28,11 @@ public class TickerController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
+        
+        if (userName == null || "anonymousUser".equals(userName)) {
+        		return "js/login";
+        }
+
 
 		BinanceApiRestClient client = clientFactory.getClient(userName);
 		
