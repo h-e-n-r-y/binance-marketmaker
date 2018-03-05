@@ -47,7 +47,8 @@ public class Utils {
         if (sep > 0) {
             return pSymbol.substring(0, sep);
         } else {
-            return pSymbol.substring(0, pSymbol.length() - 3);
+        		int i = pSymbol.endsWith("USDT") ? 4 : 3;
+            return pSymbol.substring(0, pSymbol.length() - i);
         }
 	}
 	
@@ -56,7 +57,8 @@ public class Utils {
         if (sep > 0) {
             return pSymbol.substring(sep + 1, pSymbol.length());
         } else {
-            return pSymbol.substring(pSymbol.length() - 3, pSymbol.length());
+    		int i = pSymbol.endsWith("USDT") ? 4 : 3;
+            return pSymbol.substring(pSymbol.length() - i, pSymbol.length());
         }
 	}
 	public static BigDecimal parseDecimal(String pString) {

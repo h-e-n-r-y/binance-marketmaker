@@ -13,6 +13,8 @@ public class UtilsTest {
 		assertEquals("symbol wrong", "IOSTETH", Utils.getSymbol("IOSTETH"));
 		assertEquals("symbol wrong", "NEOETH", Utils.getSymbol("NEO_ETH"));
 		assertEquals("symbol wrong", "IOSTETH", Utils.getSymbol("IOST_ETH"));
+		assertEquals("symbol wrong", "BTCUSDT", Utils.getSymbol("BTC_USDT"));
+		assertEquals("symbol wrong", "BTCUSDT", Utils.getSymbol("BTCUSDT"));
 	}
 	@Test
 	public void testGetSymbol1() {
@@ -20,6 +22,8 @@ public class UtilsTest {
 		assertEquals("symbol1 wrong", "IOST", Utils.getSymbol1("IOSTETH"));
 		assertEquals("symbol1 wrong", "NEO", Utils.getSymbol1("NEO_ETH"));
 		assertEquals("symbol1 wrong", "IOST", Utils.getSymbol1("IOST_ETH"));
+		assertEquals("symbol1 wrong", "BTC", Utils.getSymbol1("BTC_USDT"));
+		assertEquals("symbol1 wrong", "BTC", Utils.getSymbol1("BTCUSDT"));
 	}
 	@Test
 	public void testGetSymbol2() {
@@ -27,6 +31,8 @@ public class UtilsTest {
 		assertEquals("symbol2 wrong", "ETH", Utils.getSymbol2("IOSTETH"));
 		assertEquals("symbol2 wrong", "ETH", Utils.getSymbol2("NEO_ETH"));
 		assertEquals("symbol2 wrong", "ETH", Utils.getSymbol2("IOST_ETH"));
+		assertEquals("symbol2 wrong", "USDT", Utils.getSymbol2("BTC_USDT"));
+		assertEquals("symbol2 wrong", "USDT", Utils.getSymbol2("BTCUSDT"));
 	}
 	
 	@Test
