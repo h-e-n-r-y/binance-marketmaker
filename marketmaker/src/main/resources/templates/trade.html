@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="include/navigation :: head (pageTitle='Trade')"/>
 <body>
-	<div th:replace="include/navigation :: topnavi"></div>
+	<div th:replace="include/navigation :: topnavi (navi='home')"></div>
 
     <h3>Marketprice</h3>
     <div id="symbolcontainer">
@@ -20,6 +20,9 @@
     	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
     <input type="range" id="winsell" name="winsell" min="0" max="3" step="0.01" th:value="${winsell}"/>
     </div>  
+	</div>
+	<div class="profit">
+	<span id="profitlabel">Profit %:</span> <span id="profit"></span>
 	</div>
 
     <input type="hidden" name="symbol" th:value="${symbol}"/>
@@ -99,6 +102,7 @@
 /*]]>*/
 </script>
 <script th:inline="javascript">
+	var fees =  /*[[${fees}]]*/;
 	var qty1 = /*[[${qty1}]]*/;
 	var qty2 = /*[[${qty2}]]*/;
 	var symbol1 = /*[[${symbol1}]]*/;

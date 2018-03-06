@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="include/navigation :: head (pageTitle='Balances')"/>
 <body>
-	<div th:replace="include/navigation :: topnavi"></div>
+	<div th:replace="include/navigation :: topnavi (navi='balances')"></div>
 
     <h3>Balances <form id="coinselect"><select name="basecoin" onchange="coinselect.submit()">
     		<option th:selected="${symbol2 == 'BTC'}">BTC</option>

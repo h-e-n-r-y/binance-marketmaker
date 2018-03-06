@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="include/navigation :: head (pageTitle='Login')"/>
 <body>
-    	<div th:replace="include/navigation :: topnavi"></div>
+    	<div th:replace="include/navigation :: topnavi (navi='home')"></div>
     
     <div class="login">
 	<div th:if="${param.error}">

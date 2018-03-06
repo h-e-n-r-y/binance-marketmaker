@@ -2,7 +2,6 @@ package de.hw4.binance.marketmaker;
 
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,8 @@ import de.hw4.binance.marketmaker.impl.OrderImpl;
 import de.hw4.binance.marketmaker.impl.Utils;
 import de.hw4.binance.marketmaker.persistence.SchedulerTask;
 import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
+import de.hw4.binance.marketmaker.persistence.User;
+import de.hw4.binance.marketmaker.persistence.UserRepository;
 
 @Controller
 public class MarketController {
@@ -42,6 +43,9 @@ public class MarketController {
 	
 	@Autowired
 	SchedulerTaskRepository schedulerTaskRepo;
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@Autowired
 	Trader trader;
@@ -194,7 +198,7 @@ public class MarketController {
         List<AssetBalanceImpl> displayBalances = new ArrayList<>();
         TradingAction action = new TradingAction(tickerPrice);
         
-
+        User user = userRepo.findOne(userName);
         
         trader.proposeTradingAction(binanceClient, userName, displayOrders, displayBalances, action);
 
@@ -222,6 +226,7 @@ public class MarketController {
         pModel.addAttribute("qty1", displayBalances.get(0).getFree());
         pModel.addAttribute("qty2", displayBalances.get(1).getFree());
         pModel.addAttribute("task", schedulerTask);
+        pModel.addAttribute("fees", user.getFees());
         if (action.getStatus() == Status.ERROR) {
             pModel.addAttribute("errormsg", action.getErrorMsg());
         }
@@ -235,7 +240,7 @@ public class MarketController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
         if ("sa".equals(userName)) {
-        		return "redirect:/console";
+       		return "redirect:/console";
         }
         List<SchedulerTask> schedulerTasks = schedulerTaskRepo.findByUser(userName);
         List<String> symbols = new ArrayList<>();

@@ -38,22 +38,23 @@ function indextick() {
 
 var nrNotifications = 0;
 function getNotifications() {
+	console.log("fetching notifications since " + lastupdate);
 	$.get( "/notifications.js?since=" + lastupdate, function( data, textStatus, jqxhr ) {
 		  $("#notificationscript").replaceWith(data);
 		  
 	});
 	if ( nrNotifications > 0 ) {
 		if(window.Notification && Notification.permission !== "denied") {
-			for (i = 0; i<nrNotifications; i++) {
-				var t = notification.title[i];
-				var m = notification.message[i];
-				Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
-					var n = new Notification(t, { 
+			Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
+				for (let i = 0; i<nrNotifications; i++) {
+					var t = notification.title[i];
+					var m = notification.message[i];
+					new Notification(t, { 
 						body: m,
 						icon: '/path/to/icon.png' // optional
 					}); 
-				});
-			}
+				}
+			});
 		}
 	}
 }
@@ -64,6 +65,9 @@ if(window.Notification && Notification.permission !== "denied") {
 		});
 }
 
+var winbuy;
+var winsell;
+
 function initSliders() {
 
 	var slider1 = document.getElementById("winbuy");
@@ -71,25 +75,30 @@ function initSliders() {
 	var slider2 = document.getElementById("winsell");
 	var output2 = document.getElementById("sellpercentage");
 	
-	var winbuy;
-	var winsell;
-	
 	if (slider1) {
-		winbuy = slider1.value;
-		winsell = slider2.value;
+		winbuy = + parseFloat(slider1.value).toFixed(2);
+		winsell = + parseFloat(slider2.value).toFixed(2);
+		profit();
 		
 		output1.innerHTML = winbuy; // Display the default slider value
 		output2.innerHTML = winsell; // Display the default slider value
 		// Update the current slider value (each time you drag the slider handle)
 		slider1.oninput = function() {
-			winbuy = this.value;
+			winbuy = + parseFloat(this.value).toFixed(2);
 		    output1.innerHTML = winbuy;
+		    profit();
 		}
 		slider2.oninput = function() {
-			winsell = this.value;
+			winsell = + parseFloat(this.value).toFixed(2);
 		    output2.innerHTML = winsell;
+		    profit();
 		}
 	}
+}
+
+function profit() {
+	var profit = winbuy + winsell - (2 * fees);
+	$("#profit").html(profit.toFixed(2));
 }
 
 function sleep(ms) {

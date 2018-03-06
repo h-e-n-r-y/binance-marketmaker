@@ -12,14 +12,14 @@
 	<div id="nav_wrapper">
 	
 	<ul>
-	<li><a href="/">Home</a></li>
-	<li><a href="/balances">Balances</a></li>
-	<li><a href="/orders">Orders</a></li>
+	<li th:class="${navi=='home' ? ' active' : ''}"><a href="/">Home</a></li>
+	<li th:class="${navi=='balances' ? ' active' : ''}"><a href="/balances">Balances</a></li>
+	<li th:class="${navi=='orders' ? ' active' : ''}"><a href="/orders">Orders</a></li>
 	<li> <!-- placeholder --></li>
 	<li class="right" th:if="${#httpServletRequest.remoteUser}"><form id="logout" th:action="@{/logout}" method="post">
             <a href="#" onclick="logout.submit()">Logout</a>
         </form></li>
-	<li class="right" th:if="${#httpServletRequest.remoteUser}"><a href="/account" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
+	<li th:class="${'right' + (navi=='profile' ? ' active' : '')}" th:if="${#httpServletRequest.remoteUser}"><a href="/profile" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
 	</ul>
 	</div>
 	

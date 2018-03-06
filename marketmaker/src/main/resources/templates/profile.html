@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="include/navigation :: head (pageTitle='Profile')"/>
+<body>
+    	<div th:replace="include/navigation :: topnavi (navi='profile')"></div>
+    
+    <div class="form">
+	<div class="info" th:if="${info}" th:text="${info}">
+	    Invalid username and password.
+	</div>
+	<form th:action="@{/profile}" method="post">
+	<fieldset>
+    <legend>Manage your data:</legend>
+		<table>
+	    <tr><td class="label"><label for="fees"> Fees (%): </label></td><td><input type="number" step="0.01" min="0" id="fees" name="fees" th:value="${user.fees}"/></td></tr>
+	    <tr><td class="label"><label for="apikey"> API-Key: </label></td><td><textarea id="apikey" name="apikey" th:text="${user.apikey}"></textarea></td></tr>
+	    <tr><td class="label"><label for="secret"> Secret: </label></td><td><textarea id="secret" name="secret" th:text="${user.secret}"></textarea></td></tr>
+	    <tr><td> </td><td colspan="2"><input type="submit" value="Save"/></td></tr>
+	    </table>
+	</fieldset>
+	</form>
+	<form th:action="@{/profile}" method="post">
+	<fieldset>
+    <legend>Change Password:</legend>
+		<table>
+	    <tr><td class="label"><label for="pwd"> Old Password: </label></td><td><input type="password" name="oldpwd"/> </td></tr>
+	    <tr><td class="label"><label for="pwd"> Password: </label></td><td><input type="password" name="pwd"/> </td></tr>
+	    <tr><td class="label"><label for="pwd2"> Password (repeat): </label></td><td><input type="password" name="pwd2"/> </td></tr>
+	    <tr><td> </td><td colspan="2"><input type="submit" name="changePwd" value="Change Password"/></td></tr>
+	    </table>
+	</fieldset>
+	</form>
+	</div>
+</body>
+</html>

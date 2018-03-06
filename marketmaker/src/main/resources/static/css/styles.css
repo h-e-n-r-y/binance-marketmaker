@@ -24,6 +24,11 @@ div.navigation ul li.right {
 	float: right;
 }
 
+div.navigation ul li.active {
+	border-bottom: 3px solid white;
+}
+
+
 div.navigation ul li a {
 	display: block;
     color: white;
@@ -56,6 +61,9 @@ div#ticker.price.green {
 }
 div#ticker.price.red {
 	color: red;
+}
+div.profit {
+	margin-bottom: 0.5em;
 }
 td.number.green {
 	color: green;
@@ -137,6 +145,20 @@ table.balances td.value {
 }
 .login form {
 	margin-top: 1em;
+}
+
+.form {
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    border-right: 2px solid;
+    padding: 10px;
+    background-color: #eeeeee;
+}
+.form form textarea {
+	width: 500px;
+}
+div.info {
+	margin: 1em;
 }
 
 td.label {

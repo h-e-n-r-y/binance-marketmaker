@@ -100,9 +100,9 @@ public class Scheduler {
             			
             			Notification notification = new Notification(task.getUser(), "New Order", 
             					(action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL") + " " + 
-            							task.getMarketSymbol() + 
-            							action.getQuantity() + 
-            							"@" + action.getTradePrice());
+            							task.getMarketSymbol() + ": " +
+            							Utils.formatQuantity(action.getQuantity()) + 
+            							"@" + Utils.formatDecimal(action.getTradePrice()));
             			notificationRepo.save(notification);
             			
             		} catch (BinanceApiException bae) {
