@@ -32,6 +32,10 @@ Access your Marketmaker at http://localhost:8080/
 
 First you must register a user with the same username, under which you installed your api-key.
 
+## Access the H2-Database
+
+Log in as sa (Password can be set in application.properties: db.sa.password). You are automatically redirected to the H2 Database Console. Use the JDBC URL jdbc:h2:~/h2/marketmaker.
+
 ## Disclaimer
 
 The app has lots of bugs and it's state is far from being ready! 
