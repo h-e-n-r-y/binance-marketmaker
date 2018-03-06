@@ -21,6 +21,8 @@ import de.hw4.binance.marketmaker.BinanceClientFactory;
 import de.hw4.binance.marketmaker.Status;
 import de.hw4.binance.marketmaker.Trader;
 import de.hw4.binance.marketmaker.TradingAction;
+import de.hw4.binance.marketmaker.persistence.Notification;
+import de.hw4.binance.marketmaker.persistence.NotificationRepository;
 import de.hw4.binance.marketmaker.persistence.SchedulerTask;
 import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
 
@@ -33,6 +35,9 @@ public class Scheduler {
     
     @Autowired
     SchedulerTaskRepository tasksRepo;
+    
+    @Autowired
+    NotificationRepository notificationRepo;
     
     @Autowired
     BinanceClientFactory clientFactory;
@@ -76,6 +81,14 @@ public class Scheduler {
             			task.setCurrentOrderQty(action.getQuantity());
             			task.setCurrentOrderSite(action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL");
             			tasksRepo.save(task);
+            			
+            			Notification notification = new Notification(task.getUser(), "New Order", 
+            					(action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL") + " " + 
+            							task.getMarketSymbol() + 
+            							action.getQuantity() + 
+            							"@" + action.getTradePrice());
+            			notificationRepo.save(notification);
+            			
             		} catch (BinanceApiException bae) {
             			log.error("error creating " + (action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL") + " order: ", 
             					bae.getMessage());

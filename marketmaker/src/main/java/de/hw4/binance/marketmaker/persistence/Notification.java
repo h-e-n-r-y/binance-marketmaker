@@ -18,4 +18,23 @@ public class Notification {
 	
 	@Column
 	String message;
+	
+	public Notification() {
+	}
+	
+	public Notification(String pUser, String pTitle, String pMessage) {
+		timestamp = System.currentTimeMillis();
+		user = pUser;
+		title = pTitle;
+		message = pMessage;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public String getMessage() {
+		return message;
+	}
+
 }
