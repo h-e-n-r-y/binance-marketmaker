@@ -1,6 +1,5 @@
 package de.hw4.binance.marketmaker;
 
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,55 +20,51 @@ import de.hw4.binance.marketmaker.persistence.UserRepository;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private DataSource dataSource;
-	
-	@Autowired
-	private UserRepository userRepo;
-	
-	@Autowired
-	private AuthorityRepository authorityRepo;
-	
-	@Value("${db.sa.password}")
-	private String defaultSaPwd;
+  @Autowired
+  private DataSource dataSource;
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/register", "/css/**").permitAll().anyRequest().authenticated().and()
-				.formLogin().loginPage("/login").permitAll().and().logout().permitAll();
+  @Autowired
+  private UserRepository userRepo;
 
-		// for h2 console
-		http.authorizeRequests().antMatchers("/console/**").hasRole("SA_ROLE");
-		http.csrf()
-        .ignoringAntMatchers("/console/**")
-        .ignoringAntMatchers("/nice*")
+  @Autowired
+  private AuthorityRepository authorityRepo;
+
+  @Value("${db.sa.password}")
+  private String defaultSaPwd;
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests().antMatchers("/register", "/css/**").permitAll()
+        .anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and().logout()
+        .permitAll();
+
+    // for h2 console
+    http.authorizeRequests().antMatchers("/console/**").hasRole("SA_ROLE");
+    http.csrf().ignoringAntMatchers("/console/**").ignoringAntMatchers("/nice*")
         //.ignoringAntMatchers("/VAADIN*")
         .ignoringAntMatchers("/vaadinServlet/**");
-		http.headers().frameOptions().disable();
-	}
+    http.headers().frameOptions().disable();
+  }
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		
-		User sa = userRepo.findOne("sa");
-		if (sa == null) {
-			sa = new User("sa");
-			sa.setPassword(defaultSaPwd);
-			sa.setEnabled(true);
-			userRepo.save(sa);
-			
-			Authority authority = new Authority("sa", "SA_ROLE");
-			authorityRepo.save(authority);
-			
-		}
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
-		auth.jdbcAuthentication().dataSource(dataSource)
-			.usersByUsernameQuery("select username, password, enabled from user where username=?")
-			.authoritiesByUsernameQuery("select username, authority from authority where username=?")
-			.passwordEncoder(new BCryptPasswordEncoder());
+    User sa = userRepo.findOne("sa");
+    if (sa == null) {
+      sa = new User("sa");
+      sa.setPassword(defaultSaPwd);
+      sa.setEnabled(true);
+      userRepo.save(sa);
 
+      Authority authority = new Authority("sa", "SA_ROLE");
+      authorityRepo.save(authority);
 
-		//auth.inMemoryAuthentication().withUser("sa").password("sapwd").roles("USER");
-	}
+    }
+
+    auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery("select username, password, enabled from user where username=?")
+        .authoritiesByUsernameQuery("select username, authority from authority where username=?").passwordEncoder(new BCryptPasswordEncoder());
+
+    //auth.inMemoryAuthentication().withUser("sa").password("sapwd").roles("USER");
+  }
 
 }

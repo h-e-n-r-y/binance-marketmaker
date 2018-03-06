@@ -69,30 +69,4 @@ public class BalancesController {
     return "balances";
 
   }
-
-  public List<AssetBalanceImpl> balances() {
-
-    String currentPrincipalName = SecurityContextHolder.getContext().getAuthentication().getName();
-    BinanceApiRestClient binanceClient = clientFactory.getClient(currentPrincipalName);
-
-    List<AssetBalance> balances = binanceClient.getAccount().getBalances();
-    List<AssetBalanceImpl> displayBalances = new ArrayList<>();
-    for (AssetBalance bal : balances) {
-      String free = bal.getFree();
-      String locked = bal.getLocked();
-      if (free.equals("0.00000000") && locked.equals("0.00000000")) {
-        continue;
-      }
-      String asset = bal.getAsset();
-      TickerPrice tickerPrice = null;
-      try {
-        tickerPrice = binanceClient.getPrice(asset + "BTC");
-      } catch (BinanceApiException bae) {
-        //
-      }
-      AssetBalanceImpl assetBalance = new AssetBalanceImpl(bal, tickerPrice);
-      displayBalances.add(assetBalance);
-    }
-    return displayBalances;
-  }
 }
