@@ -14,11 +14,11 @@
 	<div class="sliders">
 	<div class="sliderbuy">
 	<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <br/>
-    <input type="range" id="winbuy" name="winbuy" min="0" max="300" th:value="${winbuy}"/>
+    <input type="range" id="winbuy" name="winbuy" min="0" max="3" step="0.01"  th:value="${winbuy}"/>
     </div>
     <div class="slidersell"> 
     	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
-    <input type="range" id="winsell" name="winsell" min="0" max="300" th:value="${winsell}"/>
+    <input type="range" id="winsell" name="winsell" min="0" max="3" step="0.01" th:value="${winsell}"/>
     </div>  
 	</div>
 

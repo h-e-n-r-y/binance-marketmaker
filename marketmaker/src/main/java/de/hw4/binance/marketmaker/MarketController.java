@@ -48,7 +48,6 @@ public class MarketController {
 		
 	
 	static Logger logger = LoggerFactory.getLogger(MarketController.class);
-    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100.0);
 
 
 	@RequestMapping(value = "/task", method = RequestMethod.POST)
@@ -79,11 +78,12 @@ public class MarketController {
             		return "index";
             }
         }
+        
 		if ("Activate".equals(pActivateTask)) {
 			BigDecimal bp = Utils.parseDecimal(pBuyPercentage);
-			schedulerTask.setBuyPercentage(bp.divide(HUNDRED, 8, RoundingMode.HALF_EVEN));
+			schedulerTask.setBuyPercentage(bp);
 			BigDecimal sp = Utils.parseDecimal(pSellPercentage);
-			schedulerTask.setSellPercentage(sp.divide(HUNDRED, 8, RoundingMode.HALF_EVEN));
+			schedulerTask.setSellPercentage(sp);
 			schedulerTask.activate();
 			schedulerTaskRepo.save(schedulerTask);
 		}
@@ -140,11 +140,11 @@ public class MarketController {
         		sp = schedulerTask.getSellPercentage();
         }
         if (pBuyPercentage != null) {
-        		bp = Utils.parseDecimal(pBuyPercentage).divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
+        		bp = Utils.parseDecimal(pBuyPercentage);
         		schedulerTask.setBuyPercentage(bp);
         }
         if (pSellPercentage != null) {
-        		sp = Utils.parseDecimal(pSellPercentage).divide(HUNDRED, 8, RoundingMode.HALF_EVEN);
+        		sp = Utils.parseDecimal(pSellPercentage);
         		schedulerTask.setSellPercentage(sp);
         }
         schedulerTaskRepo.save(schedulerTask);
@@ -208,10 +208,10 @@ public class MarketController {
         pModel.addAttribute("symbol1", symbol1);
         pModel.addAttribute("symbol2", symbol2);
         if (bp != null) {
-        		pModel.addAttribute("winbuy", bp.multiply(HUNDRED));
+        		pModel.addAttribute("winbuy", bp);
         }
         if (sp != null) {
-	        	pModel.addAttribute("winsell", sp.multiply(HUNDRED));
+	        	pModel.addAttribute("winsell", sp);
         }
         pModel.addAttribute("price", Utils.parseDecimal(tickerPrice.getPrice()));
         pModel.addAttribute("symbols", new String[]{symbol});

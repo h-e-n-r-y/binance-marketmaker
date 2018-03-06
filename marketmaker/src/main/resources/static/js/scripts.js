@@ -75,18 +75,18 @@ function initSliders() {
 	var winsell;
 	
 	if (slider1) {
-		winbuy = slider1.value / 100.0;
-		winsell = slider2.value / 100.0;
+		winbuy = slider1.value;
+		winsell = slider2.value;
 		
 		output1.innerHTML = winbuy; // Display the default slider value
 		output2.innerHTML = winsell; // Display the default slider value
 		// Update the current slider value (each time you drag the slider handle)
 		slider1.oninput = function() {
-			winbuy = this.value / 100.0;
+			winbuy = this.value;
 		    output1.innerHTML = winbuy;
 		}
 		slider2.oninput = function() {
-			winsell = this.value / 100.0;
+			winsell = this.value;
 		    output2.innerHTML = winsell;
 		}
 	}
