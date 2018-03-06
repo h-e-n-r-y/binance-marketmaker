@@ -35,6 +35,9 @@ public class SchedulerTask {
 	@Column(precision = 12, scale = 8)
 	BigDecimal currentOrderPrice;
 	
+	@Column
+	Long currentOrderId;
+	
 	@Column(precision = 12, scale = 8)
 	BigDecimal currentOrderQty;
 	
@@ -90,6 +93,14 @@ public class SchedulerTask {
 
 	public void setCurrentOrderPrice(BigDecimal currentOrderPrice) {
 		this.currentOrderPrice = currentOrderPrice;
+	}
+
+	public long getCurrentOrderId() {
+		return currentOrderId;
+	}
+
+	public void setCurrentOrderId(long currentOrderId) {
+		this.currentOrderId = currentOrderId;
 	}
 
 	public BigDecimal getCurrentOrderQty() {

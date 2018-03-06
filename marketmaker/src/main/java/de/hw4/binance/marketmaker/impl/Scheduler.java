@@ -1,6 +1,5 @@
 package de.hw4.binance.marketmaker.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,6 +13,9 @@ import com.binance.api.client.domain.OrderSide;
 import com.binance.api.client.domain.OrderType;
 import com.binance.api.client.domain.TimeInForce;
 import com.binance.api.client.domain.account.NewOrder;
+import com.binance.api.client.domain.account.NewOrderResponse;
+import com.binance.api.client.domain.account.Order;
+import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.exception.BinanceApiException;
 
@@ -30,8 +32,6 @@ import de.hw4.binance.marketmaker.persistence.SchedulerTaskRepository;
 public class Scheduler {
 
     private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     
     @Autowired
     SchedulerTaskRepository tasksRepo;
@@ -53,21 +53,36 @@ public class Scheduler {
         		log.info("No active Tasks.");
         }
         for (SchedulerTask task : activeTasks) {
-        		TradingAction action = trader.trade(task);
-        		String tradePriceLog = "";
-        		if (action.getTradePrice() != null) {
-        			tradePriceLog = "@" + action.getTradePrice();
-        			log.info("Task ({}: {} {} {})", task.getUser(), action.getTickerPrice(), action.getStatus(), tradePriceLog);
-        		} else {
-        			log.info("Task ({}: {} waiting {} {}@{})", task.getUser(), action.getTickerPrice(), 
-        					task.getCurrentOrderSite(),
-        					Utils.formatQuantity(task.getCurrentOrderQty()), 
-        					Utils.formatDecimal(task.getCurrentOrderPrice()));
-        		}
+    		BinanceApiRestClient apiClient = clientFactory.getClient(task.getUser());
+    		
+    		List<Order> openOrders = apiClient.getOpenOrders(new OrderRequest(task.getMarketSymbol()));
+    		for (Order order : openOrders) {
+    			Long orderId = order.getOrderId();
+    			if (order.getType() == OrderType.LIMIT && task.getCurrentOrderId() != orderId) {
+    				// update task
+    				log.info("updating Order in Task: {}", order);
+    				task.setCurrentOrderId(orderId);
+    				task.setCurrentOrderPrice(Utils.parseDecimal(order.getPrice()));
+    				task.setCurrentOrderQty(Utils.parseDecimal(order.getOrigQty()));
+    				task.setCurrentOrderSite(order.getSide().name());
+    				tasksRepo.save(task);
+    			}
+    		}
+       		TradingAction action = trader.trade(task);
+        		
+    		String tradePriceLog = "";
+    		if (action.getTradePrice() != null) {
+    			tradePriceLog = "@" + action.getTradePrice();
+    			log.info("Task ({}: {} {} {})", task.getUser(), action.getTickerPrice(), action.getStatus(), tradePriceLog);
+    		} else {
+    			log.info("Task ({}: {} waiting {} {}@{})", task.getUser(), action.getTickerPrice(), 
+    					task.getCurrentOrderSite(),
+    					Utils.formatQuantity(task.getCurrentOrderQty()), 
+    					Utils.formatDecimal(task.getCurrentOrderPrice()));
+    		}
         		
         		
             if (action.getStatus() == Status.PROPOSE_BUY || action.getStatus() == Status.PROPOSE_SELL) {
-            		BinanceApiRestClient apiClient = clientFactory.getClient(task.getUser());
             		ExchangeInfo exchangeInfo = apiClient.getExchangeInfo();
             		NewOrder order = new NewOrder(action.getTickerPrice().getSymbol(), 
             				action.getStatus() == Status.PROPOSE_BUY ? OrderSide.BUY : OrderSide.SELL, 
@@ -76,9 +91,10 @@ public class Scheduler {
             				Utils.formatPrice(action.getTradePrice(), action.getTickerPrice().getSymbol(), exchangeInfo));
             		try {
                 		Utils.sleep(50); // prevent weird server time issues.
-            			apiClient.newOrder(order);
+            			NewOrderResponse newOrderResponse = apiClient.newOrder(order);
             			task.setCurrentOrderPrice(action.getTradePrice());
             			task.setCurrentOrderQty(action.getQuantity());
+            			task.setCurrentOrderId(newOrderResponse.getOrderId());
             			task.setCurrentOrderSite(action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL");
             			tasksRepo.save(task);
             			
