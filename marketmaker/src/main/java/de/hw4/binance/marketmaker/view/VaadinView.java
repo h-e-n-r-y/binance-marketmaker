@@ -78,14 +78,14 @@ public class VaadinView extends UI {
     Grid<Order> allOrdersGrid = new Grid<>();
     allOrdersGrid
         .addColumn(Order::getTime, order -> new SimpleDateFormat("HH:mm - dd.MM.yyyy")
-            .format(new Date(order))).setCaption("Time");
+            .format(new Date(order))).setCaption("Time").setId("TIME");
     allOrdersGrid.addColumn(Order::getSide).setCaption("Type");
     allOrdersGrid.addColumn(Order::getOrigQty).setCaption("Amount");
     allOrdersGrid.addColumn(Order::getPrice).setCaption("Price");
     allOrdersGrid.addColumn(Order::getExecutedQty).setCaption("Exec Qty");
     allOrdersGrid.addColumn(Order::getStatus).setCaption("Status");
     allOrdersGrid.setSizeFull();
-    allOrdersGrid.sort("Time", SortDirection.DESCENDING);
+    allOrdersGrid.sort("TIME", SortDirection.DESCENDING);
 
     final String[] symbol = { "ETHBTC" };
     ListDataProvider<Order> allOrdersProvider = DataProvider.ofCollection(getAllOrdersForSymbol(symbol[0]));
@@ -107,13 +107,11 @@ public class VaadinView extends UI {
     assets.setSelectedItem(allAssets.get(0));
 
     ComboBox<String> currencies = new ComboBox<>("Choose Currency");
-    currencies.setItems("ETH", "BTC");
+    currencies.setItems("ETH", "BTC", "USDT");
     currencies.setSelectedItem("ETH");
 
     Button update = new Button("Update");
-    update.addClickListener(
-        (Button.ClickListener) event -> {
-
+    update.addClickListener(event -> {
           String selectedSymbol = assets.getValue() + currencies.getValue();
           allOrdersGrid.setDataProvider(DataProvider.ofCollection(getAllOrdersForSymbol(selectedSymbol)));
           symbol[0] = selectedSymbol;
