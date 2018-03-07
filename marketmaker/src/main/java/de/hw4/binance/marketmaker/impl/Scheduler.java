@@ -57,7 +57,7 @@ public class Scheduler {
     		
     		List<Order> openOrders = apiClient.getOpenOrders(new OrderRequest(task.getMarketSymbol()));
     		for (Order order : openOrders) {
-    			Long orderId = order.getOrderId();
+    			long orderId = order.getOrderId();
     			if (order.getType() == OrderType.LIMIT && task.getCurrentOrderId() != orderId) {
     				// update task
     				log.info("updating Order in Task: {}", order);

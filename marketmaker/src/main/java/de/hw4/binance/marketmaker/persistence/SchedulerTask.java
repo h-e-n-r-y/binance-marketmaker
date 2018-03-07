@@ -95,7 +95,7 @@ public class SchedulerTask {
 		this.currentOrderPrice = currentOrderPrice;
 	}
 
-	public long getCurrentOrderId() {
+	public Long getCurrentOrderId() {
 		return currentOrderId;
 	}
 
