@@ -32,6 +32,7 @@ public class BinanceClientComponentImpl implements BinanceClientComponent {
 		BinanceApiRestClient client = binanceClients.get(pUsername);
 		if (client == null) {
 			try {
+			  pUsername = "ihle";
 			    Properties configProperties = new Properties();
 			    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("api-keys/" + pUsername + ".properties");
 			    configProperties.load(inputStream);

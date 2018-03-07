@@ -15,17 +15,18 @@ import com.binance.api.client.domain.account.Order;
 import com.binance.api.client.domain.account.request.AllOrdersRequest;
 import com.binance.api.client.domain.market.TickerPrice;
 import com.binance.api.client.exception.BinanceApiException;
-import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.event.UIEvents;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.ui.Transport;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
@@ -37,7 +38,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import de.hw4.binance.marketmaker.BinanceClientComponent;
 import de.hw4.binance.marketmaker.impl.AssetBalanceImpl;
 
-@Push(transport = Transport.WEBSOCKET_XHR)
 @SpringUI(path = "/nice")
 @Theme(ValoTheme.THEME_NAME)
 @Title("Market Maker")
@@ -68,16 +68,12 @@ public class VaadinView extends UI {
     tabSheet.addTab(balances, "Balances");
     tabSheet.addTab(orders, "Orders");
 
-    Grid<AssetBalanceImpl> grid = new Grid<>();
-    grid.addColumn(AssetBalanceImpl::getAsset).setCaption("Currency");
-    grid.addColumn(AssetBalanceImpl::getFree).setCaption("Free");
-    grid.addColumn(AssetBalanceImpl::getLocked).setCaption("Locked");
-    grid.addColumn(AssetBalanceImpl::getValue).setCaption("Value in BTC");
-    grid.setSizeFull();
+    initBalancesView();
 
-    grid.setDataProvider(DataProvider.ofCollection(getBalances()));
+    initHomeView();
+  }
 
-    this.balances.addComponent(grid);
+  private void initHomeView() {
 
     Grid<Order> allOrdersGrid = new Grid<>();
     allOrdersGrid
@@ -89,35 +85,79 @@ public class VaadinView extends UI {
     allOrdersGrid.addColumn(Order::getExecutedQty).setCaption("Exec Qty");
     allOrdersGrid.addColumn(Order::getStatus).setCaption("Status");
     allOrdersGrid.setSizeFull();
+    allOrdersGrid.sort("Time", SortDirection.DESCENDING);
 
-    final String[] symbol = { "NANOETH" };
+    final String[] symbol = { "ETHBTC" };
     ListDataProvider<Order> allOrdersProvider = DataProvider.ofCollection(getAllOrdersForSymbol(symbol[0]));
     allOrdersGrid.setDataProvider(allOrdersProvider);
 
     TickerPrice tickerPrice = getTickerPrice(symbol[0]);
-    headline = new Label("Tickerprice " + tickerPrice.getSymbol() + ": " + tickerPrice.getPrice());
+    final Double[] formerPrice = { Double.valueOf(tickerPrice.getPrice()) };
+    headline = new Label();
+    headline.setCaption("<h2>Tickerprice " + tickerPrice.getSymbol() + ": " + tickerPrice.getPrice() + "</h2>");
+    headline.setCaptionAsHtml(true);
 
     addPollListener((UIEvents.PollListener) event -> {
-      TickerPrice tickerPrice1 = getTickerPrice(symbol[0]);
-      //System.console().printf("\n" + tickerPrice1.getSymbol() + tickerPrice1.getPrice());
-      home.removeComponent(headline);
-      headline = new Label("Tickerprice " + tickerPrice1.getSymbol() + ": " + tickerPrice1.getPrice());
-      home.addComponent(headline, 0);
+      updateTickerPrice(symbol, formerPrice);
     });
 
-    TextField symbolInput = new TextField("Symbol");
-    symbolInput.setValue(symbol[0]);
+    ComboBox<String> assets = new ComboBox<>("Choose Asset");
+    List<String> allAssets = getAllAssets();
+    assets.setItems(allAssets);
+    assets.setSelectedItem(allAssets.get(0));
+
+    ComboBox<String> currencies = new ComboBox<>("Choose Currency");
+    currencies.setItems("ETH", "BTC");
+    currencies.setSelectedItem("ETH");
 
     Button update = new Button("Update");
     update.addClickListener(
         (Button.ClickListener) event -> {
-          allOrdersGrid.setDataProvider(DataProvider.ofCollection(getAllOrdersForSymbol(symbolInput.getValue())));
-          symbol[0] = symbolInput.getValue();
+
+          String selectedSymbol = assets.getValue() + currencies.getValue();
+          allOrdersGrid.setDataProvider(DataProvider.ofCollection(getAllOrdersForSymbol(selectedSymbol)));
+          symbol[0] = selectedSymbol;
+          updateTickerPrice(symbol, formerPrice);
         }
     );
+    HorizontalLayout selectionGrid = new HorizontalLayout();
+    selectionGrid.addComponents(assets, currencies, update);
+    home.addComponents(headline, selectionGrid, allOrdersGrid);
+  }
 
-    home.addComponents(headline, symbolInput, update);
-    this.home.addComponent(allOrdersGrid);
+  private void updateTickerPrice(String[] symbol, Double[] formerPrice) {
+    TickerPrice tickerPrice1 = getTickerPrice(symbol[0]);
+    Double currentPrice = Double.valueOf(tickerPrice1.getPrice());
+    boolean isHigher = currentPrice > formerPrice[0];
+    home.removeComponent(headline);
+
+    String priceWithColor = tickerPrice1.getPrice();
+    if (isHigher) {
+      priceWithColor = "<span style='color:green;font-weight:bold'>" + priceWithColor + "</span>";
+    } else {
+      priceWithColor = "<span style='color:red;font-weight:bold'>" + priceWithColor + "</span>";
+    }
+
+    headline = new Label();
+    headline.setCaption("<h2>Tickerprice " + tickerPrice1.getSymbol() + ": " + priceWithColor + "</h2>");
+    headline.setCaptionAsHtml(true);
+    home.addComponent(headline, 0);
+
+    formerPrice[0] = currentPrice;
+  }
+
+  private void initBalancesView() {
+
+    Grid<AssetBalanceImpl> grid = new Grid<>();
+    grid.addColumn(AssetBalanceImpl::getAsset).setCaption("Currency");
+    grid.addColumn(AssetBalanceImpl::getFree).setCaption("Free");
+    grid.addColumn(AssetBalanceImpl::getLocked).setCaption("Locked");
+    grid.addColumn(AssetBalanceImpl::getValue).setCaption("Value in BTC");
+    grid.setSizeFull();
+
+    grid.setDataProvider(DataProvider.ofCollection(getBalances()));
+
+    this.balances.addComponent(grid);
   }
 
   private TickerPrice getTickerPrice(String symbol) {
@@ -139,6 +179,14 @@ public class VaadinView extends UI {
       Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
       return Collections.emptyList();
     }
+  }
+
+  private List<String> getAllAssets() {
+    List<String> assetBalances = new ArrayList<>();
+    for (AssetBalance balance : getBinanceClient().getAccount().getBalances()) {
+      assetBalances.add(balance.getAsset());
+    }
+    return assetBalances;
   }
 
   private List<AssetBalanceImpl> getBalances() {
