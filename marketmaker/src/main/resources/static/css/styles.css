@@ -215,3 +215,17 @@ h3 form {
 #winbuy,#winsell {
 	width: 500px;
 }
+
+#tradedatacontainer {
+	float: left;
+}
+#chartcontainer {
+	padding: 10px;
+	border: 1px solid grey;
+	height: 500px;
+	width: 700px;
+	float: right;
+}
+#ordercontainer {
+	float: none;
+}

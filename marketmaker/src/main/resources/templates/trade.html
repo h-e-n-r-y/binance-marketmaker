@@ -4,6 +4,8 @@
 <body>
 	<div th:replace="include/navigation :: topnavi (navi='home')"></div>
 
+	<div id="datachartscontainer">
+	<div id="tradedatacontainer">
     <h3>Marketprice</h3>
     <div id="symbolcontainer">
     <img th:src="${'/img/icon/' + symbol1 + '.png'}" /><img th:src="${'/img/icon/' + symbol2 + '.png'}" />
@@ -59,8 +61,10 @@
     		<input type="hidden" name="side" th:value="(${status.name} == 'PROPOSE_BUY')? 'buy' : 'sell'"/>
     		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
     </form>
-    
-    
+	</div>    
+	<div th:replace="include/chart :: chart"></div>
+	</div>    
+    <div id="ordercontainer">
     <h3>Orders</h3>
     <table class="orders">
       <tr>
@@ -90,6 +94,7 @@
         </form>
       </tr>
     </table>
+    </div>
 </body>
 <script id="tickerscript" th:inline="javascript">
 /*<![CDATA[*/
