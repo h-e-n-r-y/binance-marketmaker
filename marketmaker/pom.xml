@@ -59,7 +59,7 @@
 			<artifactId>binance-api-client</artifactId>
 			<version>1.0.1-HENRY</version>
 		</dependency>
-
+		
 	</dependencies>
 
 	<build>
@@ -70,6 +70,19 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<!-- do not use in production, disables cacheing and enables automatic redeploy -->
+			<id>dev</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+					<optional>true</optional>
+				</dependency>
+			</dependencies>
+		</profile>
+</profiles>   
 
 
 </project>
