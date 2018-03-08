@@ -222,6 +222,7 @@ h3 form {
 #chartcontainer {
 	padding: 10px;
 	border: 1px solid grey;
+	border-top: none;
 	height: 500px;
 	width: 700px;
 	float: right;
