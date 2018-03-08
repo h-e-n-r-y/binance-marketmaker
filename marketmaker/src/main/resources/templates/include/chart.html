@@ -6,10 +6,50 @@
     <link rel="stylesheet" href="/css/styles.css"/>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"/>
     <script src="/js/scripts.js"/>
-</head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    </head>
 <body>
-<div th:fragment="chart" id="chartcontainer">
-<h3 th:text="${symbol}"/>
+<div th:fragment="chart">
+<div id="chartcontainer"></div>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var symbol = [[${symbol}]];
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(initChart);
+	
+    var chart; 
+
+    function initChart() {
+    		chart = new google.visualization.CandlestickChart(document.getElementById('chartcontainer'));
+		getChart();
+		setTimeout(drawChart, 500);
+		setInterval(getChart, 10000);
+		setInterval(drawChart, 10000);
+	}
+
+  	function getChart() {
+  		console.log("fetching chart");
+		$.get( "/public/chart.js?symbol=" + symbol, function( data, textStatus, jqxhr ) {
+			  $("#chartscript").replaceWith(data);
+		});
+  	}
+    function drawChart() {
+	    console.log("drawing");
+	    var data = google.visualization.arrayToDataTable(	dataArr, true);
+	    var options = {
+	    	      legend:'none',
+	    	    	  bar: { groupWidth: '80%' }, // Remove space between bars.
+	    	      candlestick: {
+	    	            fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
+	    	            risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
+	    	          }
+	    	    	  };
+	    	 chart.draw(data, options);
+    }
+
+	/*]]>*/
+</script>
+<script type="text/javascript" th:inline="javascript" id="chartscript"></script>
 </div>
 
 </body>

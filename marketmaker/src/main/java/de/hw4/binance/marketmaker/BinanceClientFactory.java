@@ -16,6 +16,11 @@ public interface BinanceClientFactory {
 	BinanceApiRestClient getClient(String pUsername);
 	
 	/**
+	 * @return anonymous Client with restricted permissions. 
+	 */
+	BinanceApiRestClient getClient();
+
+	/**
 	 * @return ExchangeInfo.
 	 */
 	ExchangeInfo getExchangeInfo();

@@ -62,7 +62,7 @@
     		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
     </form>
 	</div>    
-	<div th:replace="include/chart :: chart"></div>
+	<div th:replace="include/chart :: chart" th:with="symbol=${symbol}"></div>
 	</div>    
     <div id="ordercontainer">
     <h3>Orders</h3>

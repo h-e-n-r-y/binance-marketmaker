@@ -48,7 +48,17 @@ public class BinanceClientComponentImpl implements BinanceClientFactory {
 		}
 		return client;
 	}
+	
+	static ThreadLocal<BinanceApiRestClient> anonClients = new ThreadLocal<>(); 
 
+	public BinanceApiRestClient getClient() {
+		BinanceApiRestClient client = anonClients.get();
+		if (client == null) {
+			client = BinanceApiClientFactory.newInstance().newRestClient();
+		}
+		return client;
+	}
+	
 	@Override
 	public ExchangeInfo getExchangeInfo() {
 		if (exchangeInfo != null) {

@@ -90,9 +90,16 @@ public class Utils {
 		return roundToTickSize(pDecimal, tickSize);
 	}
 
+	public static BigDecimal scalePrice(BigDecimal pDecimal, String pSymbol, ExchangeInfo pExchangeInfo) {
+		SymbolInfo symbolInfo = pExchangeInfo.getSymbolInfo(pSymbol);
+		String tickSize = symbolInfo.getSymbolFilter(FilterType.PRICE_FILTER).getTickSize();
+		int precision = tickSize.indexOf('1') - 1;
+		return pDecimal.setScale(precision, RoundingMode.FLOOR);
+	}
+
 	protected static String roundToTickSize(BigDecimal pDecimal, String tickSize) {
 		int precision = tickSize.indexOf('1') - 1;
-		return priceFmt.format(pDecimal.setScale(precision, RoundingMode.HALF_UP));
+		return priceFmt.format(pDecimal.setScale(precision, RoundingMode.FLOOR));
 	}
 
 	public static String formatQuantity(BigDecimal pQuantity) {

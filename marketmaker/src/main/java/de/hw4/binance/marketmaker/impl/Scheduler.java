@@ -45,7 +45,7 @@ public class Scheduler {
     @Autowired
     Trader trader;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 5000)
     public void run() {
         
         List<SchedulerTask> activeTasks = tasksRepo.findByActive(true);
@@ -58,7 +58,7 @@ public class Scheduler {
     		List<Order> openOrders = apiClient.getOpenOrders(new OrderRequest(task.getMarketSymbol()));
     		for (Order order : openOrders) {
     			long orderId = order.getOrderId();
-    			if (order.getType() == OrderType.LIMIT && task.getCurrentOrderId() != orderId) {
+    			if (order.getType() == OrderType.LIMIT && (task.getCurrentOrderId() == null || task.getCurrentOrderId() != orderId)) {
     				// update task
     				log.info("updating Order in Task: {}", order);
     				task.setCurrentOrderId(orderId);

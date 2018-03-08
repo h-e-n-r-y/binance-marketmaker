@@ -37,6 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/register", "/img/**", "/css/**", "/js/**", "/*.js").permitAll().anyRequest().authenticated().and()
 				.formLogin().loginPage("/login").permitAll().and().logout().permitAll();
+		
+		http.authorizeRequests().antMatchers("/public/**").permitAll();
 
 		// for h2 console
 		http.authorizeRequests().antMatchers("/console/**").hasRole("SA_ROLE");
