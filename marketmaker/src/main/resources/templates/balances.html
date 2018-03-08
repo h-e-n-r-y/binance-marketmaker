@@ -18,7 +18,7 @@
         <th th:text="'Value (' + ${symbol2} + ')'"></th>
       </tr>
       <tr th:each="balance : ${balances}">
-      	<td><img th:src="${'/img/icon/' + balance.asset + '.png'}" /></td>
+      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(balance.asset) + '.png'}" /></td>
         <td class="symbol" th:text="${balance.asset}">ETH</td>
         <td class="free" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
         <td class="locked" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>

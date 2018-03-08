@@ -21,8 +21,8 @@
         <th>Current Price</th>
       </tr>
       <tr  th:class="${task.active} ? 'active' : 'inactive'" th:each="task : ${activeTasks}">
-      	<td><img th:src="${'/img/icon/' + task.symbol1 + '.png'}" /></td>
-      	<td><img th:src="${'/img/icon/' + task.symbol2 + '.png'}" /></td>
+      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(task.symbol1) + '.png'}" /></td>
+      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(task.symbol2) + '.png'}" /></td>
         <td class="symbol" th:text="${task.marketSymbol}">ETH</td>
         <td class="side" th:text="${task.currentOrderSite}">BUY</td>
         <td class="number" th:text="${task.currentOrderPrice}">BUY</td>

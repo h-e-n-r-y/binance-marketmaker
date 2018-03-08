@@ -8,7 +8,7 @@
 	<div id="tradedatacontainer">
     <h3>Marketprice</h3>
     <div id="symbolcontainer">
-    <img th:src="${'/img/icon/' + symbol1 + '.png'}" /><img th:src="${'/img/icon/' + symbol2 + '.png'}" />
+    <img th:src="${'/img/icon/' + #strings.toLowerCase(symbol1) + '.png'}" /><img th:src="${'/img/icon/' + #strings.toLowerCase(symbol2) + '.png'}" />
     <div id="ticker" class="price"> <span id="symbol" th:text="${symbol}"/>: <span id="tickerprice" th:text="${price}" /></div>
  	</div>
     <h3>Automate</h3>
@@ -42,7 +42,7 @@
         <th>value</th>
       </tr>
       <tr th:each="balance : ${balances}">
-      	<td><img th:src="${'/img/icon/' + balance.asset + '.png'}" /></td>
+      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(balance.asset) + '.png'}" /></td>
         <td class="symbol" th:text="${balance.asset}">ETH</td>
         <td class="free" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
         <td class="locked" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>
