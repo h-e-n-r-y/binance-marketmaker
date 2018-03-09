@@ -13,16 +13,16 @@ public class User {
 	@Id
 	String username;
 	
-	@Column
+	@Column(length = 128)
 	String password;
 	
 	@Column
 	Boolean enabled;
 	
-	@Column
+	@Column(length = 128)
 	String apikey;
 	
-	@Column
+	@Column(length = 128)
 	String secret;
 	
 	@Column(precision = 5, scale = 4)

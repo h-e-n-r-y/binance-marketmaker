@@ -130,7 +130,7 @@ public class MarketController {
                 
         if (binanceClient == null) {
             pModel.addAttribute("errormsg", "No valid api key found for user '" + userName + "'");
-            pModel.addAttribute("errormsg2", "Please contact the administrator!");
+            pModel.addAttribute("errormsg2", "Please add your api key to your profile!");
             return "error";
         }
         

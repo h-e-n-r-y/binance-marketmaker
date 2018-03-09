@@ -44,7 +44,7 @@ public class BalancesController {
         
         if (binanceClient == null) {
             model.addAttribute("errormsg", "No valid api key found for user '" + currentPrincipalName + "'");
-            model.addAttribute("errormsg2", "Please contact the administrator!");
+            model.addAttribute("errormsg2", "Please add your api key to your profile!");
             return "error";
         }
         

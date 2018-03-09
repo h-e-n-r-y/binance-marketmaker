@@ -13,10 +13,10 @@ public class Notification {
 	@Column
 	String user;
 	
-	@Column
+	@Column(length = 64)
 	String title;
 	
-	@Column
+	@Column(length = 128)
 	String message;
 	
 	public Notification() {
