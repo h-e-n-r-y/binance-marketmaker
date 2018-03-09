@@ -82,6 +82,21 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		<profile>
+			<!-- do not use in production, disables cacheing and enables automatic redeploy -->
+			<id>executable</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<executable>true</executable>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 </profiles>   
 
 
