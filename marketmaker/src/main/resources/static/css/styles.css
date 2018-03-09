@@ -1,10 +1,6 @@
 @media screen and (max-width: 1020px) {
-  #navigation, #header, #content, #footer {
-    float: none;
-    width: auto;
-  }
 	body {
-		font-size: 3em;
+		font-size: 3vw;
 	}
 }
 
@@ -45,7 +41,7 @@ div.navigation ul li a:hover {
 	width: 100%;
 }
 #symbolcontainer {
-	width: 280px;
+	width: 80vw;
 }
 #symbolcontainer img {
 	float: left;
@@ -155,7 +151,7 @@ table.balances td.value {
     background-color: #eeeeee;
 }
 .form form textarea {
-	width: 500px;
+	width: 20em;
 }
 div.info {
 	margin: 1em;
