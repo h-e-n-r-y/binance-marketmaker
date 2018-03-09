@@ -45,7 +45,7 @@ public class UtilsTest {
 	
 	@Test
 	public void testRoundToTickSize() {
-		assertEquals("0.12346", Utils.roundToTickSize(BigDecimal.valueOf(0.123456789d), "0.00001"));
+		assertEquals("0.12345", Utils.roundToTickSize(BigDecimal.valueOf(0.123456789d), "0.00001"));
 		assertEquals("0.12345", Utils.roundToTickSize(BigDecimal.valueOf(0.12345111d), "0.00001"));
 		assertEquals("0.123", Utils.roundToTickSize(BigDecimal.valueOf(0.12345111d), "0.001"));
 	}

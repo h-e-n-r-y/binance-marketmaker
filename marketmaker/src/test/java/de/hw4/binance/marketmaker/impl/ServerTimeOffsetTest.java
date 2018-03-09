@@ -16,6 +16,6 @@ public class ServerTimeOffsetTest {
 		BinanceApiRestClient client = BinanceApiClientFactory.newInstance(null, null).newRestClient();
 
 		long offset = System.currentTimeMillis() - client.getExchangeInfo().getServerTime();
-		assertTrue("offset to big: " + offset, Math.abs(offset) < 100);
+		assertTrue("Timeoffset to big. Consider adjusting the system clock! Offset: " + offset, Math.abs(offset) < 1000);
 	}
 }
