@@ -14,6 +14,8 @@ public interface BinanceClientFactory {
 	 * @return the Client.
 	 */
 	BinanceApiRestClient getClient(String pUsername);
+
+	void destroyClient(String pUsername);
 	
 	/**
 	 * @return anonymous Client with restricted permissions. 

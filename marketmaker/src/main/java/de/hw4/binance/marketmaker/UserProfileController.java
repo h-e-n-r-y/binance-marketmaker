@@ -19,6 +19,9 @@ public class UserProfileController {
 	@Autowired
 	UserRepository userRepo;
 	
+	@Autowired
+	BinanceClientFactory clientFactory;
+	
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(Model pModel) {
 
@@ -73,14 +76,15 @@ public class UserProfileController {
         } else {
         
 	        if (pFees != null) {
-	        	user.setFees(Utils.parseDecimal(pFees));
+	        		user.setFees(Utils.parseDecimal(pFees));
 	        }
 	        if (pApikey != null) {
-	        	user.setApikey(pApikey);
+	        		user.setApikey(pApikey);
 	        }
 	        if (pSecret != null) {
-	        	user.setSecret(pSecret);
+	        		user.setSecret(pSecret);
 	        }
+	        clientFactory.destroyClient(userName);
 	        userRepo.save(user);
 	        
 	        pModel.addAttribute("info", "Profile data successfully saved.");

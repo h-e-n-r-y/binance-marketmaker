@@ -87,4 +87,9 @@ public class BinanceClientFactoryImpl implements BinanceClientFactory {
 		exchangeInfo = client.getExchangeInfo();
 		return exchangeInfo;
 	}
+
+	@Override
+	public void destroyClient(String pUsername) {
+		binanceClients.remove(pUsername);
+	}
 }
