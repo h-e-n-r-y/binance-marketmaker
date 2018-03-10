@@ -8,7 +8,7 @@
 	<div id="tradedatacontainer">
     <h3>Marketprice</h3>
     <div id="symbolcontainer">
-    <img th:src="${'/img/icon/' + #strings.toLowerCase(symbol1) + '.png'}" /><img th:src="${'/img/icon/' + #strings.toLowerCase(symbol2) + '.png'}" />
+    <img th:src="${icon1}" /><img th:src="${icon2}" />
     <div id="ticker" class="price"> <span id="symbol" th:text="${symbol}"/>: <span id="tickerprice" th:text="${price}" /></div>
  	</div>
     <h3>Automate</h3>

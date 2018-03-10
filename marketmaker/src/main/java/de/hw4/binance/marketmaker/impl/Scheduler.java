@@ -103,6 +103,7 @@ public class Scheduler {
             							task.getMarketSymbol() + ": " +
             							Utils.formatQuantity(action.getQuantity()) + 
             							"@" + Utils.formatDecimal(action.getTradePrice()));
+            			notification.setSymbol(Utils.getSymbol1(task.getMarketSymbol()));
             			notificationRepo.save(notification);
             			
             		} catch (BinanceApiException bae) {

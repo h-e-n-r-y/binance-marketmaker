@@ -116,5 +116,12 @@ public class Utils {
 		}
 
 	}
+	
+	public static String iconUrl(String pSymbol) {
+		StringBuilder s = new StringBuilder("/img/icon/");
+		s.append(pSymbol.toLowerCase());
+		s.append(".png");
+		return s.toString();
+	}
 
 }

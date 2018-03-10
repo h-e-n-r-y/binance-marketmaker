@@ -49,9 +49,10 @@ function getNotifications() {
 				for (let i = 0; i<nrNotifications; i++) {
 					var t = notification.title[i];
 					var m = notification.message[i];
+					var icon = notification.icon[i];
 					new Notification(t, { 
 						body: m,
-						icon: '/path/to/icon.png' // optional
+						icon: icon
 					}); 
 				}
 			});

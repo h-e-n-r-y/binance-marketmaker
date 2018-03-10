@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.hw4.binance.marketmaker.impl.Utils;
 import de.hw4.binance.marketmaker.persistence.Notification;
 import de.hw4.binance.marketmaker.persistence.NotificationRepository;
 
@@ -45,15 +46,18 @@ public class NotificationController {
 	        
 	        String[] titles = new String[latestNotifications.size()];
 	        String[] messages = new String[latestNotifications.size()];
+	        String[] icons = new String[latestNotifications.size()];
 	        int i = 0;
 	        for (Notification notification : latestNotifications) {
 	        	titles[i] = notification.getTitle();
 	        	messages[i] = notification.getMessage();
+	        	icons[i] = Utils.iconUrl(notification.getSymbol());
 	        	i++;
 	        }
 	
 	        model.addAttribute("title", titles);
 	        model.addAttribute("message", messages);
+	        model.addAttribute("icon", icons);
 	        model.addAttribute("notificationcount", latestNotifications.size());
         }        
         return "js/notifications";

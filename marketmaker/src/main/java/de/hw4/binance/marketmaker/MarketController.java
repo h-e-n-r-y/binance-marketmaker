@@ -210,7 +210,9 @@ public class MarketController {
         }
         pModel.addAttribute("symbol", symbol);
         pModel.addAttribute("symbol1", symbol1);
+        pModel.addAttribute("icon1", Utils.iconUrl(symbol1));
         pModel.addAttribute("symbol2", symbol2);
+        pModel.addAttribute("icon2", Utils.iconUrl(symbol2));
         if (bp != null) {
         		pModel.addAttribute("winbuy", bp);
         }

@@ -19,6 +19,9 @@ public class Notification {
 	@Column(length = 128)
 	String message;
 	
+	@Column(length = 5)
+	String symbol;
+	
 	public Notification() {
 	}
 	
@@ -35,6 +38,14 @@ public class Notification {
 	
 	public String getMessage() {
 		return message;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
 	}
 
 }
