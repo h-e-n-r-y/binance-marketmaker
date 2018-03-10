@@ -41,13 +41,14 @@ div.navigation ul li a:hover {
 	width: 100%;
 }
 #symbolcontainer {
-	width: 80vw;
+	width: 40vw;
 }
 #symbolcontainer img {
 	float: left;
 }
 #ticker {
 	padding: 0.5em;
+	width: 50vw;
 }
 #symbol {
 	padding-left: 20px;
