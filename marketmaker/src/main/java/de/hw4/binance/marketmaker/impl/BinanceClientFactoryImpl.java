@@ -24,18 +24,23 @@ public class BinanceClientFactoryImpl implements BinanceClientFactory {
 	@Autowired
 	UserRepository userRepo;
 	
-	private Map<String, BinanceApiRestClient> binanceClients;
+	private ThreadLocal<Map<String, BinanceApiRestClient>> binanceClients;
 
 	private static ExchangeInfo exchangeInfo;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public BinanceClientFactoryImpl() {
-		binanceClients = new HashMap<>();
+		binanceClients = new ThreadLocal<>();
 	}
 
 	public BinanceApiRestClient getClient(String pUsername) {
-		BinanceApiRestClient client = binanceClients.get(pUsername);
+		Map<String, BinanceApiRestClient> clientMap = binanceClients.get();
+		if (clientMap == null ) {
+			clientMap = new HashMap<>();
+			binanceClients.set(clientMap);
+		}
+		BinanceApiRestClient client = clientMap.get(pUsername);
 		if (client == null) {
 			
 			User user = userRepo.findOne(pUsername);
@@ -55,7 +60,7 @@ public class BinanceClientFactoryImpl implements BinanceClientFactory {
 			if (apiKey != null && secret != null) {
 				try {
 					client = BinanceApiClientFactory.newInstance(apiKey, secret).newRestClient();
-					binanceClients.put(pUsername, client);
+					clientMap.put(pUsername, client);
 				} catch(Exception e){
 				    logger.warn("Could not create binance client for user {}. : {}", pUsername, e.getMessage());
 				}
@@ -76,20 +81,13 @@ public class BinanceClientFactoryImpl implements BinanceClientFactory {
 	
 	@Override
 	public ExchangeInfo getExchangeInfo() {
-		if (exchangeInfo != null) {
-			return exchangeInfo;
-		}
-		if (binanceClients.isEmpty()) {
-			// can only be retrieved after a client was created.
-			return null;
-		}
-		BinanceApiRestClient client = binanceClients.entrySet().iterator().next().getValue();
-		exchangeInfo = client.getExchangeInfo();
-		return exchangeInfo;
+		BinanceApiRestClient client = getClient();
+		return client.getExchangeInfo();
 	}
 
 	@Override
 	public void destroyClient(String pUsername) {
-		binanceClients.remove(pUsername);
+		// simply destroy all clients... 
+		binanceClients = new ThreadLocal<>();
 	}
 }
