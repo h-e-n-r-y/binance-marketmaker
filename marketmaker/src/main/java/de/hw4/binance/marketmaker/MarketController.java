@@ -232,6 +232,8 @@ public class MarketController {
         if (action.getStatus() == Status.ERROR) {
             pModel.addAttribute("errormsg", action.getErrorMsg());
         }
+        
+        ChartController.collectChartData(binanceClient, exchangeInfo, symbol, pModel);
 
         return "trade";
     }

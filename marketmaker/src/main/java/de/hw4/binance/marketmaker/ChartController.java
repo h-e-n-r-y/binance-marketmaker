@@ -2,12 +2,13 @@ package de.hw4.binance.marketmaker;
 
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,27 @@ import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 
 import de.hw4.binance.marketmaker.impl.Utils;
-import groovy.lang.ExpandoMetaClassCreationHandle;
 
 @Controller
 public class ChartController {
+	
+	private static class ChartIntervalConfig {
+		CandlestickInterval interval;
+		long millis;
+		private ChartIntervalConfig(CandlestickInterval pCsi, long pRange) {
+			this.interval = pCsi;
+			this.millis = pRange;
+		}
+	}
+	
+	private static Map<ChartInterval, ChartIntervalConfig> chartIntervalCfg = new HashMap<>();
+	static {
+		chartIntervalCfg.put(ChartInterval.HOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 6_000_000L));
+		chartIntervalCfg.put(ChartInterval.FOURHOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 14_400_000L));
+		chartIntervalCfg.put(ChartInterval.DAY, new ChartIntervalConfig(CandlestickInterval.FIVE_MINUTES, 86_400_000L));
+		chartIntervalCfg.put(ChartInterval.WEEK, new ChartIntervalConfig(CandlestickInterval.TWO_HOURLY, 604_800_000L));
+		chartIntervalCfg.put(ChartInterval.MONTH, new ChartIntervalConfig(CandlestickInterval.EIGHT_HOURLY, 2_678_400_000L));
+	}
 	
 	@Autowired
 	BinanceClientFactory clientFactory;
@@ -40,12 +58,11 @@ public class ChartController {
     		@RequestParam(value="symbol", required=true) String pSymbol,
     		Model model) {
 		
-        
-        BinanceApiRestClient binanceClient = clientFactory.getClient();
-        
-        model.addAttribute("symbol", pSymbol);
+		BinanceApiRestClient binanceClient = clientFactory.getClient();
+        ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
-        
+        collectChartData(binanceClient, exchangeInfo, pSymbol, model);
+        model.addAttribute("symbol", pSymbol);
         return "include/chart";
         
 	}
@@ -55,15 +72,25 @@ public class ChartController {
     		@RequestParam(value="symbol", required=true) String pSymbol,
     		Model model) {
 		
-        
-        BinanceApiRestClient binanceClient = clientFactory.getClient();
+		BinanceApiRestClient binanceClient = clientFactory.getClient();
         ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
+        collectChartData(binanceClient, exchangeInfo, pSymbol, model);
+        model.addAttribute("symbol", pSymbol);
+        return "js/chart";
+        
+	}
+
+	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, Model model) {
+
         long now = System.currentTimeMillis();
-		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, CandlestickInterval.ONE_MINUTE, 101, now - 6000000L, now );
+        ChartInterval interval = ChartInterval.WEEK;
+        ChartIntervalConfig cfg = chartIntervalCfg.get(interval);
+		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, cfg.interval, 101, now - cfg.millis, now );
         List<List<Object>> googleChartData = new ArrayList<>();
         
-        DateFormat df = new SimpleDateFormat("HH:mm");
+        DateFormat df = (interval == ChartInterval.WEEK || interval == ChartInterval.MONTH) ? 
+        		new SimpleDateFormat("dd.MM.") : new SimpleDateFormat("HH:mm");
         
         for(Candlestick cs : chartData) {
         		List<Object> gcs = new ArrayList<>();
@@ -82,9 +109,6 @@ public class ChartController {
         }
         
         model.addAttribute("chartData", googleChartData);
-        model.addAttribute("symbol", pSymbol);
-        return "js/chart";
-        
 	}
 
 }

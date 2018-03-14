@@ -213,17 +213,26 @@ h3 form {
 	width: 500px;
 }
 
-#tradedatacontainer {
+#tradedatacontainer, #datachartscontainer, #ordercontainer {
 	float: left;
+}
+#chart {
+	position: relative;
+	height: 400px;
+	width: 750px;
+	float: left;
+	padding: 0.5em;
+}
+#chartselect {
+	position: absolute;
+	right: 1.5em;
+	z-index: 10;
+	padding: 0.5em;
 }
 #chartcontainer {
 	padding: 10px;
 	border: 1px solid grey;
-	border-top: none;
 	height: 400px;
 	width: 750px;
 	float: right;
-}
-#ordercontainer {
-	float: none;
 }

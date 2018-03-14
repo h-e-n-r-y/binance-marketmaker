@@ -9,7 +9,8 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
 <body>
-<div th:fragment="chart">
+<div th:fragment="chart" id="chart">
+<div id="chartselect"><a href="#">1h</a> <a href="#">4h</a> <a href="#">1d</a> <a href="#">1w</a> <a href="#">1m</a></div>
 <div id="chartcontainer"></div>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -21,8 +22,8 @@
 
     function initChart() {
     		chart = new google.visualization.CandlestickChart(document.getElementById('chartcontainer'));
-		getChart();
-		setTimeout(drawChart, 500);
+//		getChart();
+		drawChart();
 		setInterval(getChart, 10000);
 		setInterval(drawChart, 10000);
 	}
@@ -55,8 +56,13 @@
 
 	/*]]>*/
 </script>
-<script type="text/javascript" th:inline="javascript" id="chartscript"></script>
-</div>
+<script type="text/javascript" th:inline="javascript" id="chartscript">
+
+      /*<![CDATA[*/
+    	var dataArr = [[${chartData}]]
+    
+	/*]]>*/
+</script> </div>
 
 </body>
 </html>
