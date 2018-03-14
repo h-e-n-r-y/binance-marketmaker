@@ -127,6 +127,38 @@ function setMonthInterval() {
 	setTimeout(drawChart, 1000);
 	return false;
 }
+function drawChart() {
+    console.log("drawing");
+    var data = google.visualization.arrayToDataTable(	dataArr, true);
+    var options = {
+    		legend:'none',
+    		bar: { groupWidth: '80%' }, // Remove space between bars.
+    		crosshair: { trigger: 'focus' },
+    		chartArea:{left:60,top:20,width:'90%',height:'90%'},
+    		hAxis: {
+    			minorGridlines: {count: 1},
+    			showTextEvery: 10,
+    		}, 
+    		vAxis: {
+    			minorGridlines: {count: 10},
+    			showTextEvery: 10,
+    		}, 
+    		series: [
+    			{visibleInLegend: false},
+    			{visibleInLegend: false},
+    			{visibleInLegend: false},
+    			{visibleInLegend: false},
+    			],
+    		tooltip: {
+    			trigger:'none'
+    		},
+    		candlestick: {
+    			fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
+    			risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
+    		}
+    };
+    chart.draw(data, options);
+}
 
 function profit() {
 	var profit = winbuy + winsell - (2 * fees);

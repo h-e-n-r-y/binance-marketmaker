@@ -83,19 +83,18 @@ public class ChartController {
 
         collectChartData(binanceClient, exchangeInfo, pSymbol, interval, model);
         model.addAttribute("symbol", pSymbol);
-        model.addAttribute("interval", pInterval);
         return "js/chart";
         
 	}
 
-	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, ChartInterval interval, Model model) {
+	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, ChartInterval pInterval, Model model) {
 
         long now = System.currentTimeMillis();
-        ChartIntervalConfig cfg = chartIntervalCfg.get(interval);
+        ChartIntervalConfig cfg = chartIntervalCfg.get(pInterval);
 		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, cfg.interval, 500, now - cfg.millis, now );
         List<List<Object>> googleChartData = new ArrayList<>();
         
-        DateFormat df = (interval == ChartInterval.WEEK || interval == ChartInterval.MONTH) ? 
+        DateFormat df = (pInterval == ChartInterval.WEEK || pInterval == ChartInterval.MONTH) ? 
         		new SimpleDateFormat("dd.MM.") : new SimpleDateFormat("HH:mm");
         
         // int s = chartData.size();
@@ -122,6 +121,8 @@ public class ChartController {
         }
         
         model.addAttribute("chartData", googleChartData);
+        model.addAttribute("interval", pInterval.name());
+
 	}
 
 }
