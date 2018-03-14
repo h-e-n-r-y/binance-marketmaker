@@ -60,7 +60,7 @@ public class ChartController {
         ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
         long now = System.currentTimeMillis();
-		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, CandlestickInterval.ONE_MINUTE, 61, now - 3600000L, now );
+		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, CandlestickInterval.ONE_MINUTE, 101, now - 6000000L, now );
         List<List<Object>> googleChartData = new ArrayList<>();
         
         DateFormat df = new SimpleDateFormat("HH:mm");
