@@ -3,7 +3,7 @@ package de.hw4.binance.marketmaker;
 public enum ChartInterval {
 	
 	HOUR,
-	FOURHOUR,
+	EIGHTHOUR,
 	DAY,
 	WEEK,
 	MONTH

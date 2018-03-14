@@ -41,8 +41,8 @@ public class ChartController {
 	private static Map<ChartInterval, ChartIntervalConfig> chartIntervalCfg = new HashMap<>();
 	static {
 		chartIntervalCfg.put(ChartInterval.HOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 6_000_000L));
-		chartIntervalCfg.put(ChartInterval.FOURHOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 14_400_000L));
-		chartIntervalCfg.put(ChartInterval.DAY, new ChartIntervalConfig(CandlestickInterval.FIVE_MINUTES, 86_400_000L));
+		chartIntervalCfg.put(ChartInterval.EIGHTHOUR, new ChartIntervalConfig(CandlestickInterval.FIVE_MINUTES, 24_800_000L));
+		chartIntervalCfg.put(ChartInterval.DAY, new ChartIntervalConfig(CandlestickInterval.FIFTEEN_MINUTES, 86_400_000L));
 		chartIntervalCfg.put(ChartInterval.WEEK, new ChartIntervalConfig(CandlestickInterval.TWO_HOURLY, 604_800_000L));
 		chartIntervalCfg.put(ChartInterval.MONTH, new ChartIntervalConfig(CandlestickInterval.EIGHT_HOURLY, 2_678_400_000L));
 	}
@@ -56,12 +56,15 @@ public class ChartController {
 	@RequestMapping(value = "/public/chart", method = RequestMethod.GET)
     public String chart(
     		@RequestParam(value="symbol", required=true) String pSymbol,
+    		@RequestParam(value="interval", required=true) String pInterval,
     		Model model) {
 		
+		ChartInterval interval = ChartInterval.valueOf(pInterval);
+
 		BinanceApiRestClient binanceClient = clientFactory.getClient();
         ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
-        collectChartData(binanceClient, exchangeInfo, pSymbol, model);
+        collectChartData(binanceClient, exchangeInfo, pSymbol, interval, model);
         model.addAttribute("symbol", pSymbol);
         return "include/chart";
         
@@ -70,29 +73,39 @@ public class ChartController {
 	@RequestMapping(value = "/public/chart.js", method = RequestMethod.GET)
     public String chartscript(
     		@RequestParam(value="symbol", required=true) String pSymbol,
+    		@RequestParam(value="interval", required=true) String pInterval,
     		Model model) {
+		
+		ChartInterval interval = ChartInterval.valueOf(pInterval);
 		
 		BinanceApiRestClient binanceClient = clientFactory.getClient();
         ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
-        collectChartData(binanceClient, exchangeInfo, pSymbol, model);
+        collectChartData(binanceClient, exchangeInfo, pSymbol, interval, model);
         model.addAttribute("symbol", pSymbol);
+        model.addAttribute("interval", pInterval);
         return "js/chart";
         
 	}
 
-	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, Model model) {
+	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, ChartInterval interval, Model model) {
 
         long now = System.currentTimeMillis();
-        ChartInterval interval = ChartInterval.WEEK;
         ChartIntervalConfig cfg = chartIntervalCfg.get(interval);
-		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, cfg.interval, 101, now - cfg.millis, now );
+		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, cfg.interval, 500, now - cfg.millis, now );
         List<List<Object>> googleChartData = new ArrayList<>();
         
         DateFormat df = (interval == ChartInterval.WEEK || interval == ChartInterval.MONTH) ? 
         		new SimpleDateFormat("dd.MM.") : new SimpleDateFormat("HH:mm");
         
+        // int s = chartData.size();
+        	// int i = 0;
         for(Candlestick cs : chartData) {
+        		/*
+        		if (i++ < s - 100) {
+        			continue;
+        		}
+        		*/
         		List<Object> gcs = new ArrayList<>();
         		
         		gcs.add(df.format(new Date(cs.getOpenTime())));

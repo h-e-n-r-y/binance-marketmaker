@@ -233,7 +233,7 @@ public class MarketController {
             pModel.addAttribute("errormsg", action.getErrorMsg());
         }
         
-        ChartController.collectChartData(binanceClient, exchangeInfo, symbol, pModel);
+        ChartController.collectChartData(binanceClient, exchangeInfo, symbol, ChartInterval.HOUR, pModel);
 
         return "trade";
     }

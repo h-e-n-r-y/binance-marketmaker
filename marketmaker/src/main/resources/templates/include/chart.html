@@ -10,11 +10,12 @@
     </head>
 <body>
 <div th:fragment="chart" id="chart">
-<div id="chartselect"><a href="#">1h</a> <a href="#">4h</a> <a href="#">1d</a> <a href="#">1w</a> <a href="#">1m</a></div>
+<div id="chartselect"><a href="#" onclick='return setHourInterval()'>1h</a> <a href="#" onclick='return set8HourInterval()'>8h</a> <a href="#" onclick='return setDayInterval()'>1d</a> <a href="#" onclick='return setWeekInterval()'>1w</a> <a href="#" onclick='return setMonthInterval()'>1m</a></div>
 <div id="chartcontainer"></div>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	var symbol = [[${symbol}]];
+	var interval = [[${interval}]];
 	google.charts.load('current', {'packages':['corechart']});
 	google.charts.setOnLoadCallback(initChart);
 	
@@ -22,7 +23,6 @@
 
     function initChart() {
     		chart = new google.visualization.CandlestickChart(document.getElementById('chartcontainer'));
-//		getChart();
 		drawChart();
 		setInterval(getChart, 10000);
 		setInterval(drawChart, 10000);
@@ -30,7 +30,7 @@
 
   	function getChart() {
   		console.log("fetching chart");
-		$.get( "/public/chart.js?symbol=" + symbol, function( data, textStatus, jqxhr ) {
+		$.get( "/public/chart.js?symbol=" + symbol + "&interval=" + interval, function( data, textStatus, jqxhr ) {
 			  $("#chartscript").replaceWith(data);
 		});
   	}

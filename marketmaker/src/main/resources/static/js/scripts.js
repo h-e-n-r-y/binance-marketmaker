@@ -97,6 +97,37 @@ function initSliders() {
 	}
 }
 
+function setHourInterval() {
+	interval = 'HOUR';
+	getChart()
+	setTimeout(drawChart, 1000);
+	return false;
+}
+function set8HourInterval() {
+	interval = 'EIGHTHOUR';
+	getChart()
+	setTimeout(drawChart, 1000);
+	return false;
+}
+function setDayInterval() {
+	interval = 'DAY';
+	getChart()
+	setTimeout(drawChart, 1000);
+	return false;
+}
+function setWeekInterval() {
+	interval = 'WEEK';
+	getChart()
+	setTimeout(drawChart, 1000);
+	return false;
+}
+function setMonthInterval() {
+	interval = 'MONTH';
+	getChart()
+	setTimeout(drawChart, 1000);
+	return false;
+}
+
 function profit() {
 	var profit = winbuy + winsell - (2 * fees);
 	$("#profit").html(profit.toFixed(2));
@@ -105,3 +136,4 @@ function profit() {
 function sleep(ms) {
 	  return new Promise(resolve => setTimeout(resolve, ms));
 }
+
