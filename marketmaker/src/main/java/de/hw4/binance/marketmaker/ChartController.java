@@ -2,6 +2,7 @@ package de.hw4.binance.marketmaker;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,11 +41,11 @@ public class ChartController {
 	
 	private static Map<ChartInterval, ChartIntervalConfig> chartIntervalCfg = new HashMap<>();
 	static {
-		chartIntervalCfg.put(ChartInterval.HOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 6_000_000L));
-		chartIntervalCfg.put(ChartInterval.EIGHTHOUR, new ChartIntervalConfig(CandlestickInterval.FIVE_MINUTES, 24_800_000L));
-		chartIntervalCfg.put(ChartInterval.DAY, new ChartIntervalConfig(CandlestickInterval.FIFTEEN_MINUTES, 86_400_000L));
-		chartIntervalCfg.put(ChartInterval.WEEK, new ChartIntervalConfig(CandlestickInterval.TWO_HOURLY, 604_800_000L));
-		chartIntervalCfg.put(ChartInterval.MONTH, new ChartIntervalConfig(CandlestickInterval.EIGHT_HOURLY, 2_678_400_000L));
+		chartIntervalCfg.put(ChartInterval.HOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 12_000_000L));
+		chartIntervalCfg.put(ChartInterval.EIGHTHOUR, new ChartIntervalConfig(CandlestickInterval.FIVE_MINUTES, 60_000_000L));
+		chartIntervalCfg.put(ChartInterval.DAY, new ChartIntervalConfig(CandlestickInterval.FIFTEEN_MINUTES, 180_000_000L));
+		chartIntervalCfg.put(ChartInterval.WEEK, new ChartIntervalConfig(CandlestickInterval.TWO_HOURLY, 1_440_000_000L));
+		chartIntervalCfg.put(ChartInterval.MONTH, new ChartIntervalConfig(CandlestickInterval.EIGHT_HOURLY, 5_760_000_000L));
 	}
 	
 	@Autowired
@@ -87,6 +88,7 @@ public class ChartController {
         
 	}
 
+	private static final BigDecimal ONE_HUNDRED = BigDecimal.valueOf(100L);
 	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, ChartInterval pInterval, Model model) {
 
         long now = System.currentTimeMillis();
@@ -97,14 +99,20 @@ public class ChartController {
         DateFormat df = (pInterval == ChartInterval.WEEK || pInterval == ChartInterval.MONTH) ? 
         		new SimpleDateFormat("dd.MM.") : new SimpleDateFormat("HH:mm");
         
-        // int s = chartData.size();
-        	// int i = 0;
-        for(Candlestick cs : chartData) {
-        		/*
-        		if (i++ < s - 100) {
+        int s = chartData.size();
+        BigDecimal sum = BigDecimal.valueOf(0L);
+        for(int i = 0; i < chartData.size(); i++) {
+        		Candlestick cs = chartData.get(i);
+        		BigDecimal close = Utils.parseDecimal(cs.getClose());
+        		sum = sum.add(close);
+        		if (i >= 100) {
+        			Candlestick cs2 = chartData.get(i - 100);
+            		BigDecimal close2 = Utils.parseDecimal(cs2.getClose());
+        			sum = sum.subtract(close2);
+        		}
+        		if (i < s - 100) {
         			continue;
         		}
-        		*/
         		List<Object> gcs = new ArrayList<>();
         		
         		gcs.add(df.format(new Date(cs.getOpenTime())));
@@ -112,10 +120,11 @@ public class ChartController {
         		gcs.add(Utils.scalePrice(low, pSymbol, exchangeInfo));
         		BigDecimal open = Utils.parseDecimal(cs.getOpen());
         		gcs.add(Utils.scalePrice(open, pSymbol, exchangeInfo));
-        		BigDecimal close = Utils.parseDecimal(cs.getClose());
         		gcs.add(Utils.scalePrice(close, pSymbol, exchangeInfo));
         		BigDecimal high = Utils.parseDecimal(cs.getHigh());
         		gcs.add(Utils.scalePrice(high, pSymbol, exchangeInfo));
+        		BigDecimal average = sum.divide(ONE_HUNDRED, 8, RoundingMode.HALF_EVEN);
+        		gcs.add(Utils.scalePrice(average, pSymbol, exchangeInfo));
 
         		googleChartData.add(gcs);
         }

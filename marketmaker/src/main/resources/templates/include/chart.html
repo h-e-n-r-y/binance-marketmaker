@@ -22,7 +22,7 @@
     var chart; 
 
     function initChart() {
-    		chart = new google.visualization.CandlestickChart(document.getElementById('chartcontainer'));
+    		chart = new google.visualization.ComboChart(document.getElementById('chartcontainer'));
 		drawChart();
 		setInterval(getChart, 10000);
 		setInterval(drawChart, 10000);

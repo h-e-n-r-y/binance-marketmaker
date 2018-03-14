@@ -127,9 +127,20 @@ function setMonthInterval() {
 	setTimeout(drawChart, 1000);
 	return false;
 }
+
+
 function drawChart() {
     console.log("drawing");
     var data = google.visualization.arrayToDataTable(	dataArr, true);
+    var formatter = new google.visualization.NumberFormat({ 
+  	  pattern: '#.#####', 
+  	  fractionDigits: 7
+  	});
+    formatter.format(data, 1); // Apply formatter to first column.
+    formatter.format(data, 2); 
+    formatter.format(data, 3); 
+    formatter.format(data, 4); 
+    formatter.format(data, 5); 
     var options = {
     		legend:'none',
     		bar: { groupWidth: '80%' }, // Remove space between bars.
@@ -137,20 +148,21 @@ function drawChart() {
     		chartArea:{left:60,top:20,width:'90%',height:'90%'},
     		hAxis: {
     			minorGridlines: {count: 1},
-    			showTextEvery: 10,
+    			showTextEvery: 12,
     		}, 
     		vAxis: {
     			minorGridlines: {count: 10},
     			showTextEvery: 10,
+    			// format: '#.#####'
     		}, 
-    		series: [
-    			{visibleInLegend: false},
-    			{visibleInLegend: false},
-    			{visibleInLegend: false},
-    			{visibleInLegend: false},
-    			],
+    		series: {
+    			0: {visibleInLegend: false},
+    			1: { type: "line"}
+    		},
+    		seriesType: "candlesticks",
     		tooltip: {
-    			trigger:'none'
+    			trigger:'both',
+    			format:'#.#####'
     		},
     		candlestick: {
     			fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
