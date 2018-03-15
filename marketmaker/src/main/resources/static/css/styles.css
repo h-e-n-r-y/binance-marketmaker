@@ -322,9 +322,9 @@ h3 form {
 	display: none;
 }
 
-tbody tr:nth-child(odd) {
+table.zebra tbody tr:nth-child(odd) {
    background-color: #ddd;
 }
-tbody tr:nth-child(even) {
+table.zebra tbody tr:nth-child(even) {
    background-color: #f8f8f8;
 }
