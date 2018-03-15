@@ -13,43 +13,45 @@
  	</div>
     <h3>Automate</h3>
     <form method="post" action="/task"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
-	<div class="sliders">
-	<div class="sliderbuy">
-	<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <br/>
-    <input type="range" id="winbuy" name="winbuy" min="0" max="3" step="0.01"  th:value="${winbuy}"/>
-    </div>
-    <div class="slidersell"> 
-    	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
-    <input type="range" id="winsell" name="winsell" min="0" max="3" step="0.01" th:value="${winsell}"/>
-    </div>  
+ 	<div class="hidemobile">
+		<div class="sliders">
+		<div class="sliderbuy">
+		<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <br/>
+	    <input type="range" id="winbuy" name="winbuy" min="0" max="3" step="0.01"  th:value="${winbuy}"/>
+	    </div>
+	    <div class="slidersell"> 
+	    	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
+	    <input type="range" id="winsell" name="winsell" min="0" max="3" step="0.01" th:value="${winsell}"/>
+	    </div>  
+		</div>
+		<div class="profit">
+		<span id="profitlabel">Profit %:</span> <span id="profit"></span>
+		</div>
 	</div>
-	<div class="profit">
-	<span id="profitlabel">Profit %:</span> <span id="profit"></span>
-	</div>
-
     <input type="hidden" name="symbol" th:value="${symbol}"/>
 	<input type="submit" class="refresh" name="Refresh" value="Refresh"/>
     <input th:if="${task}" type="submit" name="activateTask" th:class="${task.active} ? 'deactivate' : 'activate'" th:value="${task.active} ? 'Deactivate' : 'Activate'"/>
     </form>
 
-    <h3>Balances</h3>
-    <table class="balances">
-      <tr>
-      	<th></th>
-        <th>Symbol</th>
-        <th>free</th>
-        <th>locked</th>
-        <th>value</th>
-      </tr>
-      <tr th:each="balance : ${balances}">
-      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(balance.asset) + '.png'}" /></td>
-        <td class="symbol" th:text="${balance.asset}">ETH</td>
-        <td class="free" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
-        <td class="locked" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>
-        <td class="value" th:text="${#numbers.formatDecimal(balance.value,1,8)} + ${balance.valueSymbol}">2.414344ETH</td>
-      </tr>
-    </table>
-
+ 	<div class="hidemobile">
+	    <h3>Balances</h3>
+	    <table class="balances">
+	      <tr>
+	      	<th></th>
+	        <th>Symbol</th>
+	        <th>free</th>
+	        <th>locked</th>
+	        <th>value</th>
+	      </tr>
+	      <tr th:each="balance : ${balances}">
+	      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(balance.asset) + '.png'}" /></td>
+	        <td class="symbol" th:text="${balance.asset}">ETH</td>
+	        <td class="free" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
+	        <td class="locked" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>
+	        <td class="value" th:text="${#numbers.formatDecimal(balance.value,1,8)} + ${balance.valueSymbol}">2.414344ETH</td>
+	      </tr>
+	    </table>
+	</div>
     <h3>Trading Status</h3>
     <p class="error" th:if="${errormsg}" th:text="${errormsg}"/>
     <span th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
@@ -70,11 +72,11 @@
       <tr>
         <th>Date</th>
         <th>Type</th>
-        <th>Amount</th>
-        <th th:text="'Amount (' + ${symbol2} + ')'">Amount2</th>
+        <th>#</th>
+        <th th:text="'#(' + ${symbol2} + ')'">Amount2</th>
         <th>Filled</th>
         <th>Price</th>
-        <th th:text="'Value (' + ${symbol2} + ')'">Value</th>
+        <th th:text="'Value (' + ${symbol2} + ')'" class="hidemobile">Value</th>
         <th>Status</th>
         <th>Action</th>
       </tr>
@@ -88,9 +90,9 @@
         <td class="number" th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
         <td class="number" th:text="${#numbers.formatDecimal(order.executedQty,1,2)}">2.414343</td>
         <td class="number" th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
-        <td class="number" th:text="${#numbers.formatDecimal(price * order.origQty ,1,8)}">2.414343</td>
-        <td th:text="${order.status}">FILLED</td>
-        <td><input th:if="${order.canCancel}" type="submit" value="Cancel" name="cancelOrder"/></td>
+        <td class="number hidemobile" th:text="${#numbers.formatDecimal(price * order.origQty ,1,8)}">2.414343</td>
+        <td th:text="${T(de.hw4.binance.marketmaker.impl.Utils).formatEnum(order.status)}">FILLED</td>
+        <td><input th:if="${order.canCancel}" type="submit" class="submit" value="Cancel" name="cancelOrder"/></td>
         </form>
       </tr>
     </table>

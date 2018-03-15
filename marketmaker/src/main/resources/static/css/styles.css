@@ -2,6 +2,16 @@
 	body {
 		font-size: 3vw;
 	}
+	.hidemobile {
+		display: none;
+	}
+	input.submit {
+		font-weight: bold;
+		font-size: 4vw;
+		background: orange;
+		width: 18vw;
+		height: 6vw;
+	}
 }
 
 div.navigation ul {
@@ -166,9 +176,25 @@ input.submit-buy, input.activate {
 	background: green;
 	color: white;
 	font-weight: bold;
-	font-size: 16px;
-	width: 150px;
-	height: 40px;
+	font-size: 4vw;
+	width: 30vw;
+	height: 8vw;
+}
+input.submit-sell, input.deactivate {
+	background: red;
+	color: black;
+	font-weight: bold;
+	font-size: 4vw;
+	width: 30vw;
+	height: 8vw;
+}
+input.refresh {
+	background: blue;
+	color: white;
+	font-weight: bold;
+	font-size: 4vw;
+	width: 30vw;
+	height: 8vw;
 }
 input.input-price {
 	font-weight: bold;
@@ -182,23 +208,6 @@ input.input-quantity {
 	font-size: 16px;
 	width: 60px;
 	padding: 7px;
-}
-
-input.submit-sell, input.deactivate {
-	background: red;
-	color: black;
-	font-weight: bold;
-	font-size: 16px;
-	width: 150px;
-	height: 40px;
-}
-input.refresh {
-	background: blue;
-	color: white;
-	font-weight: bold;
-	font-size: 16px;
-	width: 150px;
-	height: 40px;
 }
 
 h3 {
@@ -236,3 +245,37 @@ h3 form {
 	width: 750px;
 	float: right;
 }
+
+#chartselect ul {
+	list-style: none;
+	margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#chartselect ul li {
+	float: left;
+}
+
+#chartselect ul li.right {
+	float: right;
+}
+
+#chartselect ul li.active {
+	border-bottom: 3px solid rgb(69, 69, 69);
+}
+
+
+#chartselect ul li a {
+	display: block;
+    color: rgb(69, 69, 69);
+    text-align: center;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    text-decoration: none;
+}
+
+#chartselect ul li a:hover {
+	border-bottom: 3px solid rgb(69, 69, 69);
+}
+

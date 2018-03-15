@@ -99,30 +99,40 @@ function initSliders() {
 
 function setHourInterval() {
 	interval = 'HOUR';
+	$("#chartselect ul li.active").removeClass("active");
+	$("#hint").addClass("active");
 	getChart()
 	setTimeout(drawChart, 1000);
 	return false;
 }
 function set8HourInterval() {
 	interval = 'EIGHTHOUR';
+	$("#chartselect ul li.active").removeClass("active");
+	$("#h8int").addClass("active");
 	getChart()
 	setTimeout(drawChart, 1000);
 	return false;
 }
 function setDayInterval() {
 	interval = 'DAY';
+	$("#chartselect ul li.active").removeClass("active");
+	$("#dint").addClass("active");
 	getChart()
 	setTimeout(drawChart, 1000);
 	return false;
 }
 function setWeekInterval() {
 	interval = 'WEEK';
+	$("#chartselect ul li.active").removeClass("active");
+	$("#wint").addClass("active");
 	getChart()
 	setTimeout(drawChart, 1000);
 	return false;
 }
 function setMonthInterval() {
 	interval = 'MONTH';
+	$("#chartselect ul li.active").removeClass("active");
+	$("#mint").addClass("active");
 	getChart()
 	setTimeout(drawChart, 1000);
 	return false;

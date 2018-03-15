@@ -10,7 +10,14 @@
     </head>
 <body>
 <div th:fragment="chart" id="chart">
-<div id="chartselect"><a href="#" onclick='return setHourInterval()'>1h</a> <a href="#" onclick='return set8HourInterval()'>8h</a> <a href="#" onclick='return setDayInterval()'>1d</a> <a href="#" onclick='return setWeekInterval()'>1w</a> <a href="#" onclick='return setMonthInterval()'>1m</a></div>
+<div id="chartselect">
+	<ul>
+		<li id="hint" class="active"><a href="#" onclick='return setHourInterval()'>1h</a></li>
+		<li id="h8int"><a href="#" onclick='return set8HourInterval()'>8h</a></li>
+		<li id="dint"><a href="#" onclick='return setDayInterval()'>1d</a></li>
+		<li id="wint"><a href="#" onclick='return setWeekInterval()'>1w</a></li>
+		<li id="mint"><a href="#" onclick='return setMonthInterval()'>1m</a></li>
+	</ul></div>
 <div id="chartcontainer"></div>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/

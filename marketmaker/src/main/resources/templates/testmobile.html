@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <title th:text="'MarketMaker - ' + ${pageTitle}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../static/css/styles.css"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"/>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+	<div th:fragment="topnavi" class="navigation" id="navigation">
+	<div id="nav_wrapper">
+	
+	<ul>
+	<li th:class="${navi=='home' ? ' active' : ''}"><a href="/">Home</a></li>
+	<li th:class="${navi=='balances' ? ' active' : ''}"><a href="/balances">Balances</a></li>
+	<li th:class="${navi=='orders' ? ' active' : ''}"><a href="/orders">Orders</a></li>
+	<li> <!-- placeholder --></li>
+	<li class="right" th:if="${#httpServletRequest.remoteUser}"><form id="logout" th:action="@{/logout}" method="post">
+            <a href="#" onclick="logout.submit()">Logout</a>
+        </form></li>
+	<li th:class="${'right' + (navi=='profile' ? ' active' : '')}" th:if="${#httpServletRequest.remoteUser}"><a href="/profile" th:text="${#httpServletRequest.remoteUser}">Account</a></li>
+	</ul>
+	</div>
+	
+	</div>
+
+	<div id="datachartscontainer">
+	<div id="tradedatacontainer">
+    <h3>Marketprice</h3>
+    <div id="symbolcontainer">
+    <img th:src="${'/img/icon/' + #strings.toLowerCase(symbol1) + '.png'}" /><img th:src="${'/img/icon/' + #strings.toLowerCase(symbol2) + '.png'}" />
+    <div id="ticker" class="price"> <span id="symbol" th:text="${symbol}">NEOETH</span>: <span id="tickerprice" th:text="${price}" >0.00115280</span></div>
+ 	</div>
+    <h3>Automate</h3>
+    <form method="post" action="/task"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+	<div class="sliders">
+	<div class="sliderbuy">
+	<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <br/>
+    <input type="range" id="winbuy" name="winbuy" min="0" max="3" step="0.01"  th:value="${winbuy}"/>
+    </div>
+    <div class="slidersell"> 
+    	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
+    <input type="range" id="winsell" name="winsell" min="0" max="3" step="0.01" th:value="${winsell}"/>
+    </div>  
+	</div>
+	<div class="profit">
+	<span id="profitlabel">Profit %:</span> <span id="profit"></span>
+	</div>
+
+    <input type="hidden" name="symbol" th:value="${symbol}"/>
+	<input type="submit" class="refresh" name="Refresh" value="Refresh"/>
+    <input th:if="${task}" type="submit" name="activateTask" th:class="${task.active} ? 'deactivate' : 'activate'" th:value="${task.active} ? 'Deactivate' : 'Activate'"/>
+    </form>
+
+    <h3>Balances</h3>
+    <table class="balances">
+      <tr>
+      	<th></th>
+        <th>Symbol</th>
+        <th>free</th>
+        <th>locked</th>
+        <th>value</th>
+      </tr>
+      <tr th:each="balance : ${balances}">
+      	<td><img th:src="${'/img/icon/' + #strings.toLowerCase(balance.asset) + '.png'}" /></td>
+        <td class="symbol" th:text="${balance.asset}">ETH</td>
+        <td class="free" th:text="${#numbers.formatDecimal(balance.free,1,8)}">0.414343</td>
+        <td class="locked" th:text="${#numbers.formatDecimal(balance.locked,1,8)}">2.414344</td>
+        <td class="value" th:text="${#numbers.formatDecimal(balance.value,1,8)} + ${balance.valueSymbol}">2.414344ETH</td>
+      </tr>
+    </table>
+
+    <h3>Trading Status</h3>
+    <span th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
+    <span th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
+    <form th:if="${tradePrice}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    		<input type="hidden" name="symbol" th:value="${symbol}"/>
+    		Quantity: <input type="text" class="input-quantity" name="quantity" th:value="${quantity}"/>
+    		Price: <input type="text" class="input-price" name="pricelimit" th:value="${tradePrice}"/>
+    		<input type="hidden" name="side" th:value="(${status.name} == 'PROPOSE_BUY')? 'buy' : 'sell'"/>
+    		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
+    </form>
+	</div>    
+	<div th:replace="include/chart :: chart" th:with="symbol=${symbol}"></div>
+	</div>    
+    <div id="ordercontainer">
+    <h3>Orders</h3>
+    <table class="orders">
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th th:text="'Amount (' + ${symbol2} + ')'">Amount2</th>
+        <th>Filled</th>
+        <th>Price</th>
+        <th th:text="'Value (' + ${symbol2} + ')'">Value</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      <tr th:each="order,iterStat : ${orders}" th:class="${#strings.toLowerCase(order.side)} + ' count' + ${iterStat.count}">
+		<form method="post" action="/trade"><input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+    		<input type="hidden" name="symbol" th:value="${symbol}"/>
+    		<input type="hidden" name="orderID" th:value="${order.orderId}"/>
+        <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>
+        <td th:text="${order.side}">Buy</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.origQty,1,2)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.executedQty,1,2)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
+        <td class="number" th:text="${#numbers.formatDecimal(price * order.origQty ,1,8)}">2.414343</td>
+        <td th:text="${order.status}">FILLED</td>
+        <td><input th:if="${order.canCancel}" type="submit" value="Cancel" name="cancelOrder"/></td>
+        </form>
+      </tr>
+    </table>
+    </div>
+</body>
+
+</html>

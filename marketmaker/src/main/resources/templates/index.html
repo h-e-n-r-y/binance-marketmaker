@@ -29,11 +29,11 @@
         <td class="number" th:id="${'price' + task.marketSymbol }"> </td>
         <td><form action="/trade" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         		<input type="hidden" name="symbol" th:value="${task.marketSymbol}"/>
-        		<input type="submit" name="trade" value="Trade"/></form>
+        		<input type="submit" class="submit" name="trade" value="Trade"/></form>
         	</td>
-        <td><form action="/task" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <td class="hidemobile"><form action="/task" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         		<input type="hidden" name="symbol" th:value="${task.marketSymbol}"/>
-        		<input type="submit" name="removeTask" value="Remove"/></form>
+        		<input type="submit" class="submit" name="removeTask" value="Remove"/></form>
         	</td>
       </tr>
      </table>

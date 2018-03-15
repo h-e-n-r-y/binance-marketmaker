@@ -123,5 +123,9 @@ public class Utils {
 		s.append(".png");
 		return s.toString();
 	}
+	
+	public static String formatEnum(Enum pEnum) {
+		return pEnum.name().toLowerCase().replace("_", " ");
+	}
 
 }
