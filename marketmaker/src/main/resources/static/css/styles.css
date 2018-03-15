@@ -91,7 +91,7 @@ div.navigation ul li a:hover {
 	width: 100%;
 }
 #symbolcontainer {
-	width: 40vw;
+	width: 20vw;
 }
 #symbolcontainer img {
 	float: left;
@@ -147,7 +147,7 @@ table.orders tr.buy, table.tasks tr.active {
 table.orders tr.count1 {
 	background: PapayaWhip;
 }
-table.orders th {
+th {
 	background: #eeeeee;
 }
 
@@ -236,14 +236,14 @@ input.refresh {
 input.input-price {
 	font-weight: bold;
 	font-size: 1vw;
-	width: 160px;
+	width: 80px;
 	padding: 7px;
 }
 
 input.input-quantity {
 	font-weight: bold;
 	font-size: 1vw;
-	width: 80px;
+	width: 40px;
 	padding: 7px;
 }
 
@@ -320,4 +320,11 @@ h3 form {
 
 .hidedesktop {
 	display: none;
+}
+
+tbody tr:nth-child(odd) {
+   background-color: #ddd;
+}
+tbody tr:nth-child(even) {
+   background-color: #f8f8f8;
 }
