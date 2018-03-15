@@ -54,7 +54,7 @@ public class OrderImpl {
 	}
 	
 	public boolean getCanCancel() {
-		return order.getStatus() == OrderStatus.NEW;
+		return order.getStatus() == OrderStatus.NEW || order.getStatus() == OrderStatus.PARTIALLY_FILLED;
 	}
 
 }
