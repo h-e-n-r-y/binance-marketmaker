@@ -5,6 +5,9 @@
 	.hidemobile {
 		display: none;
 	}
+	h3 {
+		width: 90vw !important;
+	}
 	input.submit {
 		font-weight: bold;
 		font-size: 4vw;
@@ -28,7 +31,7 @@
 		width: 10vw !important;
 		padding: 7px;
 	}
-	input {
+	input, select, option {
 		font-size: 4vw;
 		margin: 0.1em;
 		background: #F0F0F0;
@@ -233,7 +236,7 @@ input.input-quantity {
 }
 
 h3 {
-	width: 20em;
+	width: 35vw;
 }
 
 h3 form {
