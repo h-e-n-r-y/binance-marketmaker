@@ -25,7 +25,7 @@
         <td th:if="${balance.value}" class="value" th:text="${#numbers.formatDecimal(balance.value,1,8)}">2.414344ETH</td>
         <td th:if="${balance.value}"><form action="/trade" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         		<input type="hidden" name="symbol" th:value="${balance.asset + symbol2}"/>
-        		<input type="submit" name="trade" value="Trade"/></form></td>
+        		<input type="submit" name="trade" class="submit" value="Trade"/></form></td>
         	
       </tr>
     </table>

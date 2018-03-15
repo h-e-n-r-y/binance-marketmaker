@@ -12,6 +12,31 @@
 		width: 18vw;
 		height: 6vw;
 	}
+	input.refresh, input.buy, input.activate, input.sell, input.deactivate {
+		width: 30vw !important;
+		height: 8vw !important;
+	}
+	input.input-price {
+		font-weight: bold;
+		font-size: 4vw !important;
+		width: 17vw !important;
+		padding: 7px;
+	}
+	input.input-quantity {
+		font-weight: bold;
+		font-size: 4vw !important;
+		width: 10vw !important;
+		padding: 7px;
+	}
+	input {
+		font-size: 4vw;
+		margin: 0.1em;
+		background: #F0F0F0;
+	}
+	div.login, div.error {
+	    width: 60vw;
+	    height: 32vw;
+	}
 }
 
 div.navigation ul {
@@ -176,37 +201,34 @@ input.submit-buy, input.activate {
 	background: green;
 	color: white;
 	font-weight: bold;
-	font-size: 4vw;
-	width: 30vw;
-	height: 8vw;
+	width: 200px;
+	height: 50px;
 }
 input.submit-sell, input.deactivate {
 	background: red;
 	color: black;
 	font-weight: bold;
-	font-size: 4vw;
-	width: 30vw;
-	height: 8vw;
+	width: 200px;
+	height: 50px;
 }
 input.refresh {
 	background: blue;
 	color: white;
 	font-weight: bold;
-	font-size: 4vw;
-	width: 30vw;
-	height: 8vw;
+	width: 200px;
+	height: 50px;
 }
 input.input-price {
 	font-weight: bold;
-	font-size: 16px;
-	width: 150px;
+	font-size: 1vw;
+	width: 160px;
 	padding: 7px;
 }
 
 input.input-quantity {
 	font-weight: bold;
-	font-size: 16px;
-	width: 60px;
+	font-size: 1vw;
+	width: 80px;
 	padding: 7px;
 }
 
