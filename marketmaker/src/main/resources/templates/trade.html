@@ -72,8 +72,9 @@
       <tr>
         <th>Date</th>
         <th>Type</th>
-        <th>#</th>
-        <th th:text="'#(' + ${symbol2} + ')'">Amount2</th>
+        <th class="hidemobile" th:text="'#(' + ${symbol1} + ')'">#</th>
+        <th class="hidemobile" th:text="'#(' + ${symbol2} + ')'">Amount2</th>
+        <th class="hidedesktop">#</th>
         <th>Filled</th>
         <th>Price</th>
         <th th:text="'Value (' + ${symbol2} + ')'" class="hidemobile">Value</th>
@@ -85,9 +86,10 @@
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
     		<input type="hidden" name="orderID" th:value="${order.orderId}"/>
         <td th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}">Time</td>
-        <td th:text="${order.side}">Buy</td>
-        <td class="number" th:text="${#numbers.formatDecimal(order.origQty,1,2)}">2.414343</td>
-        <td class="number" th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
+        <td th:text="${T(de.hw4.binance.marketmaker.impl.Utils).formatEnum(order.side)}">Buy</td>
+        <td class="number hidemobile" th:text="${#numbers.formatDecimal(order.origQty,1,2)}">2.414343</td>
+        <td class="number hidemobile" th:text="${#numbers.formatDecimal(order.Qty2,1,8)}">2.414343</td>
+        <td class="number hidedesktop" th:text="${#numbers.formatDecimal(order.origQty,1,2) + symbol1 + ' ' + #numbers.formatDecimal(order.Qty2,1,8) + symbol2}">2.414343</td>
         <td class="number" th:text="${#numbers.formatDecimal(order.executedQty,1,2)}">2.414343</td>
         <td class="number" th:text="${#numbers.formatDecimal(order.price,1,8)}">2.414343</td>
         <td class="number hidemobile" th:text="${#numbers.formatDecimal(price * order.origQty ,1,8)}">2.414343</td>

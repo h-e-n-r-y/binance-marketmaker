@@ -5,6 +5,9 @@
 	.hidemobile {
 		display: none;
 	}
+	.hidedesktop {
+		display: block !important;
+	}
 	h3 {
 		width: 90vw !important;
 	}
@@ -31,6 +34,9 @@
 		width: 10vw !important;
 		padding: 7px;
 	}
+	#username, #password {
+		width: 38vw;
+	}
 	input, select, option {
 		font-size: 4vw;
 		margin: 0.1em;
@@ -40,6 +46,12 @@
 	    width: 60vw;
 	    height: 32vw;
 	}
+	
+	#chart, #chartcontainer {
+		height: 80vw !important;
+		width: 90vw !important;
+	}
+	
 }
 
 div.navigation ul {
@@ -244,7 +256,7 @@ h3 form {
 }
 
 #winbuy,#winsell {
-	width: 500px;
+	width: 420px;
 }
 
 #tradedatacontainer, #datachartscontainer, #ordercontainer {
@@ -268,7 +280,9 @@ h3 form {
 	border: 1px solid grey;
 	height: 400px;
 	width: 750px;
+	/*
 	float: right;
+	*/
 }
 
 #chartselect ul {
@@ -304,3 +318,6 @@ h3 form {
 	border-bottom: 3px solid rgb(69, 69, 69);
 }
 
+.hidedesktop {
+	display: none;
+}
