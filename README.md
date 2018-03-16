@@ -6,7 +6,7 @@ Installation
 
 ## Clone and build binance-exchange/binance-java-api:
 
-I have forked the original api to be able to implement minor extensions easily. https://github.com/h-e-n-r-y/binance-java-api branch henry-master.
+I have forked the original api to be able to implement minor extensions easily. Also there is a major bug in the original API (regarding multi-tenancy) that is fixed in this version: https://github.com/h-e-n-r-y/binance-java-api branch henry-master.
 
 	cd ~/git
 	git clone https://github.com/h-e-n-r-y/binance-java-api
