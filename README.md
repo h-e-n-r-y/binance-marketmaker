@@ -6,7 +6,7 @@ Installation
 
 ## Clone and build binance-exchange/binance-java-api:
 
-I have forked the original api to be able to implement minor extensions easily. https://github.com/h-e-n-r-y/binance-java-api branch henry-master.
+I have forked the original api to be able to implement minor extensions easily. Also there is a major bug in the original API (regarding multi-tenancy) that is fixed in this version: https://github.com/h-e-n-r-y/binance-java-api branch henry-master.
 
 	cd ~/git
 	git clone https://github.com/h-e-n-r-y/binance-java-api
@@ -19,18 +19,17 @@ I have forked the original api to be able to implement minor extensions easily. 
 	cd binance-marketmaker/marketmaker
 	mvn install
 
-## Install your binance-api-key
-
-Create your API-Key here: https://www.binance.com/userCenter/createApi.html
-Rename src/main/resources/api-keys/username.properties. (Choose the username you will use)
-Fill in api-key and secret.
-
 ## Start
 	mvn spring-boot:run
 	
 Access your Marketmaker at http://localhost:8080/
 
-First you must register a user with the same username, under which you installed your api-key.
+First you must register a user and upload your api-key.
+
+## Install your binance-api-key
+
+Create your API-Key here: https://www.binance.com/userCenter/createApi.html
+Edit your profile and fill in api-key and secret.
 
 ## Access the H2-Database
 
