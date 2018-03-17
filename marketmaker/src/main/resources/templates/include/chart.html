@@ -23,6 +23,8 @@
 	/*<![CDATA[*/
 	var symbol = [[${symbol}]];
 	var interval = [[${interval}]];
+    var chartWithLimit = [[${withLimit}]];
+    var tradePrice = [[${tradePrice}]];
 	google.charts.load('current', {'packages':['corechart']});
 	google.charts.setOnLoadCallback(initChart);
 	
@@ -37,7 +39,7 @@
 
   	function getChart() {
   		console.log("fetching chart");
-		$.get( "/public/chart.js?symbol=" + symbol + "&interval=" + interval, function( data, textStatus, jqxhr ) {
+		$.get( "/public/chart.js?symbol=" + symbol + "&interval=" + interval + "&limit=" + tradePrice, function( data, textStatus, jqxhr ) {
 			  $("#chartscript").replaceWith(data);
 		});
   	}

@@ -206,7 +206,7 @@ public class MarketController {
         		pModel.addAttribute("quantity", Utils.formatQuantity(action.getQuantity()));
         }
         if (action.getTradePrice() != null) {
-        		pModel.addAttribute("tradePrice", Utils.formatPrice(action.getTradePrice(), symbol, exchangeInfo));
+			pModel.addAttribute("tradePrice", Utils.formatPrice(action.getTradePrice(), symbol, exchangeInfo));
         }
         pModel.addAttribute("symbol", symbol);
         pModel.addAttribute("symbol1", symbol1);
@@ -233,7 +233,7 @@ public class MarketController {
             pModel.addAttribute("errormsg", action.getErrorMsg());
         }
         
-        ChartController.collectChartData(binanceClient, exchangeInfo, symbol, ChartInterval.HOUR, pModel);
+        ChartController.collectChartData(binanceClient, exchangeInfo, symbol, ChartInterval.HOUR, action.getTradePrice(), pModel);
 
         return "trade";
     }

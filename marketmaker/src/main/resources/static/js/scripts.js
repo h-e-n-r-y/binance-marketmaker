@@ -138,7 +138,6 @@ function setMonthInterval() {
 	return false;
 }
 
-
 function drawChart() {
     console.log("drawing");
     var data = google.visualization.arrayToDataTable(	dataArr, true);
@@ -150,7 +149,10 @@ function drawChart() {
     formatter.format(data, 2); 
     formatter.format(data, 3); 
     formatter.format(data, 4); 
-    formatter.format(data, 5); 
+    formatter.format(data, 5);
+    if (chartWithLimit) {
+    		formatter.format(data, 6);
+	}
     var options = {
     		legend:'none',
     		bar: { groupWidth: '80%' }, // Remove space between bars.
@@ -165,12 +167,10 @@ function drawChart() {
     			showTextEvery: 10,
     			// format: '#.#####'
     		}, 
-    		series: {
-    			0: {visibleInLegend: false},
-    			1: { type: "line"}
-    		},
+    		interpolateNulls: true,
+    		series: chartWithLimit ? seriesWithLimit : seriesWithoutLimit,
     		seriesType: "candlesticks",
-    		tooltip: {
+    		tooltip: { 
     			trigger:'both',
     			format:'#.#####'
     		},
@@ -181,6 +181,16 @@ function drawChart() {
     };
     chart.draw(data, options);
 }
+
+var seriesWithLimit = {
+		0: {visibleInLegend: false},
+		1: { type: "line"},
+		2: { type: "line"}
+	};
+var seriesWithoutLimit = {
+		0: {visibleInLegend: false},
+		1: { type: "line"}
+	};
 
 function profit() {
 	var profit = winbuy + winsell - (2 * fees);

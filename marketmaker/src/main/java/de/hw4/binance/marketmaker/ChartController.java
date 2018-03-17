@@ -7,13 +7,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.domain.account.Order;
+import com.binance.api.client.domain.account.request.OrderRequest;
 import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
@@ -39,7 +43,7 @@ public class ChartController {
 		}
 	}
 	
-	private static Map<ChartInterval, ChartIntervalConfig> chartIntervalCfg = new HashMap<>();
+	private static Map<ChartInterval, ChartIntervalConfig> chartIntervalCfg = new EnumMap<>(ChartInterval.class);
 	static {
 		chartIntervalCfg.put(ChartInterval.HOUR, new ChartIntervalConfig(CandlestickInterval.ONE_MINUTE, 12_000_000L));
 		chartIntervalCfg.put(ChartInterval.EIGHTHOUR, new ChartIntervalConfig(CandlestickInterval.FIVE_MINUTES, 60_000_000L));
@@ -58,6 +62,7 @@ public class ChartController {
     public String chart(
     		@RequestParam(value="symbol", required=true) String pSymbol,
     		@RequestParam(value="interval", required=true) String pInterval,
+    		@RequestParam(value="limit", required=false) String pLimit,
     		Model model) {
 		
 		ChartInterval interval = ChartInterval.valueOf(pInterval);
@@ -65,7 +70,12 @@ public class ChartController {
 		BinanceApiRestClient binanceClient = clientFactory.getClient();
         ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
-        collectChartData(binanceClient, exchangeInfo, pSymbol, interval, model);
+        BigDecimal limit = null;
+		if (pLimit != null ) {
+			limit = Utils.parseDecimal(pLimit);
+		}
+
+        collectChartData(binanceClient, exchangeInfo, pSymbol, interval, limit, model);
         model.addAttribute("symbol", pSymbol);
         return "include/chart";
         
@@ -75,22 +85,44 @@ public class ChartController {
     public String chartscript(
     		@RequestParam(value="symbol", required=true) String pSymbol,
     		@RequestParam(value="interval", required=true) String pInterval,
+    		@RequestParam(value="limit", required=false) String pLimit,
     		Model model) {
 		
 		ChartInterval interval = ChartInterval.valueOf(pInterval);
+		BigDecimal limit = null;
+		if (pLimit != null && !pLimit.equals("undefined") && !pLimit.equals("null")) {
+			limit = Utils.parseDecimal(pLimit);
+		}
 		
-		BinanceApiRestClient binanceClient = clientFactory.getClient();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        
+		BinanceApiRestClient binanceClient = clientFactory.getClient(userName);
         ExchangeInfo exchangeInfo = clientFactory.getExchangeInfo();
 
-        collectChartData(binanceClient, exchangeInfo, pSymbol, interval, model);
+        collectChartData(binanceClient, exchangeInfo, pSymbol, interval, limit, model);
         model.addAttribute("symbol", pSymbol);
         return "js/chart";
         
 	}
 
 	private static final BigDecimal ONE_HUNDRED = BigDecimal.valueOf(100L);
-	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, String pSymbol, ChartInterval pInterval, Model model) {
-
+	protected static void collectChartData(BinanceApiRestClient binanceClient, ExchangeInfo exchangeInfo, 
+			String pSymbol, ChartInterval pInterval, BigDecimal pLimit, Model model) {
+		
+		BigDecimal limit = pLimit;
+		if (limit == null) {
+			OrderRequest or = new OrderRequest(pSymbol);
+			List<Order> openOrders = binanceClient.getOpenOrders(or);
+			for (Order o : openOrders) {
+				String price = o.getPrice();
+				if (price != null) {
+					limit = Utils.parseDecimal(price);
+					break;
+				}
+			}
+		}
+		
         long now = System.currentTimeMillis();
         ChartIntervalConfig cfg = chartIntervalCfg.get(pInterval);
 		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, cfg.interval, 500, now - cfg.millis, now );
@@ -125,12 +157,21 @@ public class ChartController {
         		gcs.add(Utils.scalePrice(high, pSymbol, exchangeInfo));
         		BigDecimal average = sum.divide(ONE_HUNDRED, 8, RoundingMode.HALF_EVEN);
         		gcs.add(Utils.scalePrice(average, pSymbol, exchangeInfo));
+        		
+        		if (limit != null) {
+        			if (i == s - 100 || i == s - 1) {
+        				gcs.add(limit);
+        			} else {
+        				gcs.add(null);
+        			}
+        		}
 
         		googleChartData.add(gcs);
         }
         
         model.addAttribute("chartData", googleChartData);
         model.addAttribute("interval", pInterval.name());
+        model.addAttribute("withLimit", limit != null);
 
 	}
 
