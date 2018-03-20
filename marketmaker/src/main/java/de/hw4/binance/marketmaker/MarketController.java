@@ -99,6 +99,13 @@ public class MarketController {
 		model.addAttribute("task", schedulerTask);
 		return trade(pSymbol, null, null, null, null, null, null, pBuyPercentage, pSellPercentage, model);
 	}
+	
+	@RequestMapping(value = "/trade", method = RequestMethod.GET)
+    public String tradeEntry(
+    		@RequestParam(value="symbol", required=true) String pSymbol,
+    		Model pModel) {
+		return trade(pSymbol, null, null, null, null, null, null, null, null, pModel);
+	}
 
 	@RequestMapping(value = "/trade", method = RequestMethod.POST)
     public String trade(

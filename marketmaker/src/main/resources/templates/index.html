@@ -27,7 +27,7 @@
         <td class="side" th:text="${task.currentOrderSite}">BUY</td>
         <td class="number" th:text="${task.currentOrderPrice}">BUY</td>
         <td class="number" th:id="${'price' + task.marketSymbol }"> </td>
-        <td><form action="/trade" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <td><form action="/trade" method="get"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         		<input type="hidden" name="symbol" th:value="${task.marketSymbol}"/>
         		<input type="submit" class="submit" name="trade" value="Trade"/></form>
         	</td>
