@@ -16,16 +16,13 @@
  	<div class="hidemobile">
 		<div class="sliders">
 		<div class="sliderbuy">
-		<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <br/>
+		<label for="winbuy">Buy %:</label> <span id="buypercentage"></span> <span id="profitbuylabel">Profit %:</span> <span id="profitbuy"></span><br/>
 	    <input type="range" id="winbuy" name="winbuy" min="0" max="3" step="0.01"  th:value="${winbuy}"/>
 	    </div>
 	    <div class="slidersell"> 
-	    	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <br/>
+	    	<label for="winsell">Sell %:</label> <span id="sellpercentage"></span> <span id="profitselllabel">Profit %:</span> <span id="profitsell"></span><br/>
 	    <input type="range" id="winsell" name="winsell" min="0" max="3" step="0.01" th:value="${winsell}"/>
 	    </div>  
-		</div>
-		<div class="profit">
-		<span id="profitlabel">Profit %:</span> <span id="profit"></span>
 		</div>
 	</div>
     <input type="hidden" name="symbol" th:value="${symbol}"/>

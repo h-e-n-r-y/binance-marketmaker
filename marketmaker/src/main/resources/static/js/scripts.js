@@ -85,13 +85,13 @@ function initSliders() {
 		output2.innerHTML = winsell; // Display the default slider value
 		// Update the current slider value (each time you drag the slider handle)
 		slider1.oninput = function() {
-			winbuy = + parseFloat(this.value).toFixed(2);
-		    output1.innerHTML = winbuy;
+			winbuy = + parseFloat(this.value);
+		    output1.innerHTML = winbuy.toFixed(2);
 		    profit();
 		}
 		slider2.oninput = function() {
-			winsell = + parseFloat(this.value).toFixed(2);
-		    output2.innerHTML = winsell;
+			winsell = + parseFloat(this.value);
+		    output2.innerHTML = winsell.toFixed(2);
 		    profit();
 		}
 	}
@@ -193,8 +193,10 @@ var seriesWithoutLimit = {
 	};
 
 function profit() {
-	var profit = winbuy + winsell - (2 * fees);
-	$("#profit").html(profit.toFixed(2));
+	var profitbuy = winbuy - (2 * fees);
+	$("#profitbuy").html(profitbuy.toFixed(2));
+	var profitsell = winsell - (2 * fees);
+	$("#profitsell").html(profitsell.toFixed(2));
 }
 
 function sleep(ms) {
