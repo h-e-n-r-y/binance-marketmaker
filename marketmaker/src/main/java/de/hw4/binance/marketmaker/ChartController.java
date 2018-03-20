@@ -23,8 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.domain.OrderStatus;
 import com.binance.api.client.domain.account.Order;
-import com.binance.api.client.domain.account.request.OrderRequest;
+import com.binance.api.client.domain.account.request.AllOrdersRequest;
 import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
@@ -112,17 +113,9 @@ public class ChartController {
 			String pSymbol, ChartInterval pInterval, BigDecimal pLimit, Model model) {
 		
 		BigDecimal limit = pLimit;
-		if (limit == null) {
-			OrderRequest or = new OrderRequest(pSymbol);
-			List<Order> openOrders = binanceClient.getOpenOrders(or);
-			for (Order o : openOrders) {
-				String price = o.getPrice();
-				if (price != null) {
-					limit = Utils.parseDecimal(price);
-					break;
-				}
-			}
-		}
+		List<Order> orders = null;
+		AllOrdersRequest or = new AllOrdersRequest(pSymbol);
+		orders = binanceClient.getAllOrders(or);
 		
         long now = System.currentTimeMillis();
         ChartIntervalConfig cfg = chartIntervalCfg.get(pInterval);
@@ -134,6 +127,7 @@ public class ChartController {
         
         int s = chartData.size();
         BigDecimal sum = BigDecimal.valueOf(0L);
+        BigDecimal actlimit = null;
         for(int i = 0; i < chartData.size(); i++) {
         		Candlestick cs = chartData.get(i);
         		BigDecimal close = Utils.parseDecimal(cs.getClose());
@@ -158,13 +152,27 @@ public class ChartController {
         		gcs.add(Utils.scalePrice(high, pSymbol, exchangeInfo));
         		BigDecimal average = sum.divide(ONE_HUNDRED, 8, RoundingMode.HALF_EVEN);
         		gcs.add(Utils.scalePrice(average, pSymbol, exchangeInfo));
-        		
+
         		if (limit != null) {
-        			if (i == s - 100 || i == s - 1) {
-        				gcs.add(limit);
-        			} else {
-        				gcs.add(null);
+            		if ((i == s - 100) || (i == s - 1)) {
+            			gcs.add(limit);
+            		} else {
+            			gcs.add(null);
+            		}
+        		}
+        		if (i == s - 100) {
+        			if (orders != null) {
+        				actlimit = getOrderLimitBefore(orders, cs.getCloseTime());
+        				gcs.add(actlimit);
         			}
+        		} else if (i == s - 1) {
+    				gcs.add(actlimit);
+        		} else {
+    				BigDecimal curlimit = getOrderLimit(orders, cs.getOpenTime(), cs.getCloseTime());
+    				gcs.add(curlimit);
+    				if (curlimit != null) {
+    					actlimit = curlimit;
+    				}
         		}
 
         		googleChartData.add(gcs);
@@ -172,8 +180,45 @@ public class ChartController {
         
         model.addAttribute("chartData", googleChartData);
         model.addAttribute("interval", pInterval.name());
-        model.addAttribute("withLimit", limit != null);
+        model.addAttribute("withLimit", limit != null || actlimit != null);
+        model.addAttribute("withLimitAndHistory", limit != null && actlimit != null);
 
+	}
+	
+	private static BigDecimal getOrderLimit(List<Order> pOrders, long pOpen, long pClose) {
+		
+		long candleDuration = pClose - pOpen;
+		String lastPrice = null;
+		for (Order p : pOrders) {
+			if (p.getStatus() == OrderStatus.FILLED || p.getStatus() == OrderStatus.NEW || p.getStatus() == OrderStatus.PARTIALLY_FILLED) {
+				if (p.getTime() > pOpen && p.getTime() <= pClose) {
+					return getOrderLimitBefore(pOrders, pClose);
+				}
+				if (p.getTime() > pOpen  + candleDuration && p.getTime() <= pClose + candleDuration ) {
+					if (lastPrice == null) {
+						return null;
+					}
+					return Utils.parseDecimal(lastPrice);
+				}
+				if (p.getTime() > pOpen + candleDuration + 1) {
+					return null;
+				}
+				lastPrice = p.getPrice();
+			}
+		}
+		return null;
+	}
+	
+	private static BigDecimal getOrderLimitBefore(List<Order> pOrders, long pClose) {
+		BigDecimal limit = null;
+		for (Order p : pOrders) {
+			if (p.getStatus() == OrderStatus.FILLED || p.getStatus() == OrderStatus.NEW || p.getStatus() == OrderStatus.PARTIALLY_FILLED) {
+				if (p.getTime() <= pClose) {
+					limit = Utils.parseDecimal(p.getPrice());
+				}
+			}
+		}
+		return limit;
 	}
 
 }
