@@ -138,6 +138,15 @@ function setMonthInterval() {
 	return false;
 }
 
+function set6MonthInterval() {
+	interval = 'SIXMONTH';
+	$("#chartselect ul li.active").removeClass("active");
+	$("#m6int").addClass("active");
+	getChart()
+	setTimeout(drawChart, 1000);
+	return false;
+}
+
 function drawChart() {
     console.log("drawing");
     var data = google.visualization.arrayToDataTable(	dataArr, true);

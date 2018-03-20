@@ -6,6 +6,7 @@ public enum ChartInterval {
 	EIGHTHOUR,
 	DAY,
 	WEEK,
-	MONTH
+	MONTH,
+	SIXMONTH
 
 }

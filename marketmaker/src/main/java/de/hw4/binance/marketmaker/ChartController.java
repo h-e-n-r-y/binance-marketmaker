@@ -50,6 +50,7 @@ public class ChartController {
 		chartIntervalCfg.put(ChartInterval.DAY, new ChartIntervalConfig(CandlestickInterval.FIFTEEN_MINUTES, 180_000_000L));
 		chartIntervalCfg.put(ChartInterval.WEEK, new ChartIntervalConfig(CandlestickInterval.TWO_HOURLY, 1_440_000_000L));
 		chartIntervalCfg.put(ChartInterval.MONTH, new ChartIntervalConfig(CandlestickInterval.EIGHT_HOURLY, 5_760_000_000L));
+		chartIntervalCfg.put(ChartInterval.SIXMONTH, new ChartIntervalConfig(CandlestickInterval.DAILY, 31_104_000_000L)); // actually only getting data for 3 months
 	}
 	
 	@Autowired
@@ -128,7 +129,7 @@ public class ChartController {
 		List<Candlestick> chartData = binanceClient.getCandlestickBars(pSymbol, cfg.interval, 500, now - cfg.millis, now );
         List<List<Object>> googleChartData = new ArrayList<>();
         
-        DateFormat df = (pInterval == ChartInterval.WEEK || pInterval == ChartInterval.MONTH) ? 
+        DateFormat df = (pInterval == ChartInterval.WEEK || pInterval == ChartInterval.MONTH || pInterval == ChartInterval.SIXMONTH) ? 
         		new SimpleDateFormat("dd.MM.") : new SimpleDateFormat("HH:mm");
         
         int s = chartData.size();
