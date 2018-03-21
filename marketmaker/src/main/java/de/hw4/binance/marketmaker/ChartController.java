@@ -163,16 +163,22 @@ public class ChartController {
         		if (i == s - 100) {
         			if (orders != null) {
         				actlimit = getOrderLimitBefore(orders, cs.getCloseTime());
-        				gcs.add(actlimit);
+        				if (actlimit != null) {
+        					gcs.add(actlimit);
+        				}
         			}
         		} else if (i == s - 1) {
-    				gcs.add(actlimit);
-        		} else {
-    				BigDecimal curlimit = getOrderLimit(orders, cs.getOpenTime(), cs.getCloseTime());
-    				gcs.add(curlimit);
-    				if (curlimit != null) {
-    					actlimit = curlimit;
+    				if (actlimit != null) {
+    					gcs.add(actlimit);
     				}
+        		} else {
+        			if (actlimit != null) {
+	    				BigDecimal curlimit = getOrderLimit(orders, cs.getOpenTime(), cs.getCloseTime());
+	    				gcs.add(curlimit);
+	    				if (curlimit != null) {
+	    					actlimit = curlimit;
+	    				}
+        			}
         		}
 
         		googleChartData.add(gcs);
@@ -180,7 +186,8 @@ public class ChartController {
         
         model.addAttribute("chartData", googleChartData);
         model.addAttribute("interval", pInterval.name());
-        model.addAttribute("withLimit", limit != null || actlimit != null);
+        model.addAttribute("withLimit", limit != null);
+        model.addAttribute("withHistory", actlimit != null);
         model.addAttribute("withLimitAndHistory", limit != null && actlimit != null);
 
 	}

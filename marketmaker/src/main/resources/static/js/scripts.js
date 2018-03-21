@@ -177,7 +177,7 @@ function drawChart() {
     			// format: '#.#####'
     		}, 
     		interpolateNulls: true,
-    		series: chartWithLimitAndHistory ? seriesWithLimitAndHistory : (chartWithLimit ? seriesWithLimit : seriesWithoutLimit),
+    		series: chartWithLimitAndHistory ? seriesWithLimitAndHistory : (chartWithLimit ? seriesWithLimit : (chartWithHistory ? seriesWithHistory : seriesWithoutLimit)),
     		seriesType: "candlesticks",
     		tooltip: { 
     			trigger:'both',
@@ -191,11 +191,18 @@ function drawChart() {
     chart.draw(data, options);
 }
 
-var seriesWithLimit = {
+var seriesWithHistory = {
 		0: {visibleInLegend: false},
 		1: { type: "line"},
 		2: { type: "line", color: 'orange'}
 	};
+
+var seriesWithLimit = {
+		0: {visibleInLegend: false},
+		1: { type: "line"},
+		2: { type: "line", color: 'blue'}
+	};
+
 var seriesWithLimitAndHistory = {
 		0: {visibleInLegend: false},
 		1: { type: "line"},
@@ -204,7 +211,7 @@ var seriesWithLimitAndHistory = {
 	};
 var seriesWithoutLimit = {
 		0: {visibleInLegend: false},
-		1: { type: "line", color: 'orange'}
+		1: { type: "line"}
 	};
 
 function profit() {
