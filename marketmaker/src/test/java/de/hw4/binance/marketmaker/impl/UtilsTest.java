@@ -1,9 +1,17 @@
 package de.hw4.binance.marketmaker.impl;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+import com.binance.api.client.domain.general.ExchangeInfo;
+import com.binance.api.client.domain.general.FilterType;
+import com.binance.api.client.domain.general.SymbolFilter;
+import com.binance.api.client.domain.general.SymbolInfo;
 
 public class UtilsTest {
 
@@ -48,5 +56,31 @@ public class UtilsTest {
 		assertEquals("0.12345", Utils.roundToTickSize(BigDecimal.valueOf(0.123456789d), "0.00001"));
 		assertEquals("0.12345", Utils.roundToTickSize(BigDecimal.valueOf(0.12345111d), "0.00001"));
 		assertEquals("0.123", Utils.roundToTickSize(BigDecimal.valueOf(0.12345111d), "0.001"));
+	}
+	
+	@Test
+	public void testFormatQuantity() {
+		ExchangeInfo ex = new ExchangeInfo();
+		List<SymbolInfo> symbols = new ArrayList<>();
+		SymbolInfo si = new SymbolInfo();
+		si.setSymbol("NEOETH");
+		symbols.add(si);
+		ex.setSymbols(symbols);
+		
+		
+		SymbolFilter lotFilter = new SymbolFilter();
+		lotFilter.setFilterType(FilterType.LOT_SIZE);
+		lotFilter.setStepSize("0.001");
+		
+		List<SymbolFilter> filters = new ArrayList<>();
+		filters.add(lotFilter);
+		si.setFilters(filters);
+		
+				
+		assertEquals("Quantity falsch", "1.023", Utils.formatQuantity(BigDecimal.valueOf(1.02345), "NEOETH", ex));
+		assertEquals("Quantity scale falsch", 3, Utils.getQuantityScale("NEOETH", ex));
+		int quantityScale = 3;
+		assertEquals("Quantity step falsch", "0.001", Utils.formatQuantity(BigDecimal.valueOf(Math.pow(10.0, -quantityScale)), "NEOETH", ex));
+		
 	}
 }

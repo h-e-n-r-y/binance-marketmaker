@@ -102,13 +102,19 @@ public class Utils {
 		return priceFmt.format(pDecimal.setScale(precision, RoundingMode.FLOOR));
 	}
 
-	public static String formatQuantity(BigDecimal pQuantity) {
-		if (pQuantity == null) {
-			return "null";
-		}
-		return qtyFmt.format(pQuantity);
+	public static String formatQuantity(BigDecimal pQuantity, String pSymbol, ExchangeInfo pExchangeInfo) {
+		SymbolInfo symbolInfo = pExchangeInfo.getSymbolInfo(pSymbol);
+		String tickSize = symbolInfo.getSymbolFilter(FilterType.LOT_SIZE).getStepSize();
+		return roundToTickSize(pQuantity, tickSize);
 	}
 	
+	public static BigDecimal scaleQuantity(BigDecimal pDecimal, String pSymbol, ExchangeInfo pExchangeInfo) {
+		SymbolInfo symbolInfo = pExchangeInfo.getSymbolInfo(pSymbol);
+		String tickSize = symbolInfo.getSymbolFilter(FilterType.LOT_SIZE).getStepSize();
+		int precision = tickSize.indexOf('1') - 1;
+		return pDecimal.setScale(precision, RoundingMode.FLOOR);
+	}
+
 	public static void sleep(long pMillis) {
 		try {
 			TimeUnit.MILLISECONDS.sleep(pMillis);
@@ -126,6 +132,18 @@ public class Utils {
 	
 	public static String formatEnum(Enum pEnum) {
 		return pEnum.name().toLowerCase().replace("_", " ");
+	}
+
+	public static int getQuantityScale(String pSymbol, ExchangeInfo pExchangeInfo) {
+		SymbolInfo symbolInfo = pExchangeInfo.getSymbolInfo(pSymbol);
+		String tickSize = symbolInfo.getSymbolFilter(FilterType.LOT_SIZE).getStepSize();
+		return tickSize.indexOf('1') - 1;
+	}
+
+	public static int getPriceScale(String pSymbol, ExchangeInfo pExchangeInfo) {
+		SymbolInfo symbolInfo = pExchangeInfo.getSymbolInfo(pSymbol);
+		String tickSize = symbolInfo.getSymbolFilter(FilterType.PRICE_FILTER).getTickSize();
+		return tickSize.indexOf('1') - 1;
 	}
 
 }

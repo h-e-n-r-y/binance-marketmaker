@@ -27,12 +27,14 @@
 		font-size: 4vw !important;
 		width: 17vw !important;
 		padding: 7px;
+		text-align: center;
 	}
 	input.input-quantity {
 		font-weight: bold;
 		font-size: 4vw !important;
-		width: 10vw !important;
+		width: 15vw !important;
 		padding: 7px;
+		text-align: center;
 	}
 	#username, #password {
 		width: 38vw;
@@ -235,16 +237,18 @@ input.refresh {
 }
 input.input-price {
 	font-weight: bold;
-	font-size: 1vw;
-	width: 80px;
-	padding: 7px;
+	font-size: 18px;
+	height: 35px;
+	width: 90px;
+	text-align: center;
 }
 
 input.input-quantity {
 	font-weight: bold;
-	font-size: 1vw;
-	width: 40px;
-	padding: 7px;
+	font-size: 18px;
+	height: 35px;
+	width: 80px;
+	text-align: center;
 }
 
 h3 {

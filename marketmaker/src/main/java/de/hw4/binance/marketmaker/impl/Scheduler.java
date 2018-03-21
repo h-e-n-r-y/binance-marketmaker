@@ -54,6 +54,7 @@ public class Scheduler {
         }
         for (SchedulerTask task : activeTasks) {
     		BinanceApiRestClient apiClient = clientFactory.getClient(task.getUser());
+    		ExchangeInfo exchangeInfo = apiClient.getExchangeInfo();
     		
     		List<Order> openOrders = apiClient.getOpenOrders(new OrderRequest(task.getMarketSymbol()));
     		for (Order order : openOrders) {
@@ -68,7 +69,7 @@ public class Scheduler {
     				tasksRepo.save(task);
     			}
     		}
-       		TradingAction action = trader.trade(task);
+    		TradingAction action = trader.trade(task);
         		
     		String tradePriceLog = "";
     		if (action.getTradePrice() != null) {
@@ -77,17 +78,16 @@ public class Scheduler {
     		} else {
     			log.info("Task ({}: {} waiting {} {}@{})", task.getUser(), action.getTickerPrice(), 
     					task.getCurrentOrderSite(),
-    					Utils.formatQuantity(task.getCurrentOrderQty()), 
+    					Utils.formatQuantity(task.getCurrentOrderQty(), action.getTickerPrice().getSymbol(), exchangeInfo ), 
     					Utils.formatDecimal(task.getCurrentOrderPrice()));
     		}
         		
         		
             if (action.getStatus() == Status.PROPOSE_BUY || action.getStatus() == Status.PROPOSE_SELL) {
-            		ExchangeInfo exchangeInfo = apiClient.getExchangeInfo();
             		NewOrder order = new NewOrder(action.getTickerPrice().getSymbol(), 
             				action.getStatus() == Status.PROPOSE_BUY ? OrderSide.BUY : OrderSide.SELL, 
             				OrderType.LIMIT, TimeInForce.GTC, 
-            				Utils.formatQuantity(action.getQuantity()), 
+            				Utils.formatQuantity(action.getQuantity(), action.getTickerPrice().getSymbol(), exchangeInfo), 
             				Utils.formatPrice(action.getTradePrice(), action.getTickerPrice().getSymbol(), exchangeInfo));
             		try {
                 		Utils.sleep(50); // prevent weird server time issues.
@@ -101,7 +101,7 @@ public class Scheduler {
             			Notification notification = new Notification(task.getUser(), "New Order", 
             					(action.getStatus() == Status.PROPOSE_BUY ? "BUY" : "SELL") + " " + 
             							task.getMarketSymbol() + ": " +
-            							Utils.formatQuantity(action.getQuantity()) + 
+            							Utils.formatQuantity(action.getQuantity(), action.getTickerPrice().getSymbol(), exchangeInfo) + 
             							"@" + Utils.formatDecimal(action.getTradePrice()));
             			notification.setSymbol(Utils.getSymbol1(task.getMarketSymbol()));
             			notificationRepo.save(notification);

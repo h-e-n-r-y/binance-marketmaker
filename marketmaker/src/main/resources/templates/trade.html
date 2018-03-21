@@ -54,9 +54,13 @@
     <span th:class="'status ' + ${#strings.toLowerCase(status)}" th:text="${status}" />
     <span th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
     <form th:if="${tradePrice}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    	<script type="text/javascript" th:inline="javascript" id="tradescript">
+    		var qtyScale = [[${qtyScale}]];
+    		var priceScale = [[${priceScale}]];
+    	</script>
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
-    		Quantity: <input type="text" class="input-quantity" name="quantity" th:value="${quantity}"/>
-    		Price: <input type="text" class="input-price" name="pricelimit" th:value="${tradePrice}"/>
+    		Quantity: <input class="input-quantity" name="quantity" type="number" min="0" th:value="${quantity}" th:step="${qtyStep}"/>
+    		Price: <input class="input-price" name="pricelimit" type="number" min="0" th:value="${tradePrice}" th:step="${priceStep}"/>
     		<input type="hidden" name="side" th:value="(${status.name} == 'PROPOSE_BUY')? 'buy' : 'sell'"/>
     		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
     </form>
