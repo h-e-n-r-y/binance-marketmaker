@@ -208,9 +208,11 @@ public class MarketController {
         User user = userRepo.findOne(userName);
         
         trader.proposeTradingAction(binanceClient, userName, displayOrders, displayBalances, action);
-
+        BigDecimal quantity = null;
+        
         if (action.getQuantity() != null) {
-        		pModel.addAttribute("quantity", Utils.scaleQuantity(action.getQuantity(), symbol, exchangeInfo));
+        		quantity = Utils.scaleQuantity(action.getQuantity(), symbol, exchangeInfo);
+        		pModel.addAttribute("quantity", quantity);
         		int quantityScale = Utils.getQuantityScale(symbol, exchangeInfo);
     			pModel.addAttribute("qtyStep", Utils.formatQuantity(BigDecimal.valueOf(Math.pow(10.0, -quantityScale)), symbol, exchangeInfo));
 			pModel.addAttribute("qtyScale", quantityScale);
@@ -221,6 +223,12 @@ public class MarketController {
 			pModel.addAttribute("priceStep", Utils.formatPrice(BigDecimal.valueOf(Math.pow(10.0, -priceScale)), symbol, exchangeInfo));
 			pModel.addAttribute("priceScale", priceScale);
         }
+        if (action.getStatus() == Status.PROPOSE_BUY && quantity != null) {
+        		pModel.addAttribute("quantity2", Utils.formatDecimal(quantity.multiply(action.getTradePrice())));
+        }
+        	if (action.getStatus() == Status.PROPOSE_SELL && quantity != null) {
+        		pModel.addAttribute("quantity2", Utils.formatDecimal(quantity.divide(action.getTradePrice())));
+        	}
         pModel.addAttribute("symbol", symbol);
         pModel.addAttribute("symbol1", symbol1);
         pModel.addAttribute("icon1", Utils.iconUrl(symbol1));

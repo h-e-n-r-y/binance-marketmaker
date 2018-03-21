@@ -22,14 +22,14 @@
 		width: 30vw !important;
 		height: 8vw !important;
 	}
-	input.input-price {
+	#input_price {
 		font-weight: bold;
 		font-size: 4vw !important;
 		width: 17vw !important;
 		padding: 7px;
 		text-align: center;
 	}
-	input.input-quantity {
+	#input_quantity {
 		font-weight: bold;
 		font-size: 4vw !important;
 		width: 15vw !important;
@@ -235,15 +235,15 @@ input.refresh {
 	width: 200px;
 	height: 50px;
 }
-input.input-price {
+#input_price {
 	font-weight: bold;
 	font-size: 18px;
 	height: 35px;
-	width: 90px;
+	width: 140px;
 	text-align: center;
 }
 
-input.input-quantity {
+#input_quantity {
 	font-weight: bold;
 	font-size: 18px;
 	height: 35px;

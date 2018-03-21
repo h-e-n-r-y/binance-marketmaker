@@ -55,15 +55,23 @@
     <span th:if="${tradePrice}" class="tradeprice" th:text="'@' + ${#numbers.formatDecimal(tradePrice,1,8)}" />
     <form th:if="${tradePrice}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     	<script type="text/javascript" th:inline="javascript" id="tradescript">
+    		var buy = [[${status.name} == 'PROPOSE_BUY']];
+    		var qty1 = [[${qty1}]];
+    		var qty2 = [[${qty2}]];
     		var qtyScale = [[${qtyScale}]];
     		var priceScale = [[${priceScale}]];
+    		var quantity = [[${quantity}]];
+    		var quantity2 = [[${quantity2}]];
     	</script>
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
-    		Quantity: <input class="input-quantity" name="quantity" type="number" min="0" th:value="${quantity}" th:step="${qtyStep}"/>
-    		Price: <input class="input-price" name="pricelimit" type="number" min="0" th:value="${tradePrice}" th:step="${priceStep}"/>
+    		Quantity (<span th:text="${symbol1}"></span>) : <input id="input_quantity" name="quantity" type="number" min="0" th:value="${quantity}" th:step="${qtyStep}" onchange="adjustPrice()" th:disabled="${status.name} == 'PROPOSE_SELL'"/>
+    		Price: <input id="input_price" name="pricelimit" type="number" min="0" th:value="${tradePrice}" th:step="${priceStep}" onchange="adjustQty()"/>
     		<input type="hidden" name="side" th:value="(${status.name} == 'PROPOSE_BUY')? 'buy' : 'sell'"/>
     		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
     </form>
+    	<div th:if="${tradePrice}">
+    		Quantity (<span th:text="${symbol2}"></span>): <span id="quantity2" th:text="${quantity2}"></span>
+    	</div>
 	</div>    
 	<div th:replace="include/chart :: chart" th:with="symbol=${symbol}"></div>
 	</div>    

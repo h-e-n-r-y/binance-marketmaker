@@ -221,6 +221,31 @@ function profit() {
 	$("#profitsell").html(profitsell.toFixed(2));
 }
 
+function adjustPrice() {
+	if (buy) {
+		var newPrice;
+		var newQty = $("#input_quantity").val();
+		newPrice = qty2 / newQty;
+		$("#input_price").val(newPrice.toFixed(priceScale));
+	}
+}
+
+function adjustQty() {
+	var newPrice = $("#input_price").val();
+	var newQty;
+	if (buy) {
+		newQty = qty2 / newPrice; 
+		$("#input_quantity").val(quantityScale(newQty, qtyScale));
+	} else {
+		newQty = quantity * newPrice; 
+		$("#quantity2").text(quantityScale(newQty, 5));
+	}
+}
+
+function quantityScale(qty, scale) {
+	return Math.floor(qty * Math.pow(10, scale))/Math.pow(10,scale);
+}
+
 function sleep(ms) {
 	  return new Promise(resolve => setTimeout(resolve, ms));
 }
