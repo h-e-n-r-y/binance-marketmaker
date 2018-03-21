@@ -2,6 +2,7 @@ package de.hw4.binance.marketmaker;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,10 +225,10 @@ public class MarketController {
 			pModel.addAttribute("priceScale", priceScale);
         }
         if (action.getStatus() == Status.PROPOSE_BUY && quantity != null) {
-        		pModel.addAttribute("quantity2", Utils.formatDecimal(quantity.multiply(action.getTradePrice())));
+        		pModel.addAttribute("quantity2", Utils.formatDecimal(quantity.divide(action.getTradePrice(), RoundingMode.FLOOR)));
         }
         	if (action.getStatus() == Status.PROPOSE_SELL && quantity != null) {
-        		pModel.addAttribute("quantity2", Utils.formatDecimal(quantity.divide(action.getTradePrice())));
+        		pModel.addAttribute("quantity2", Utils.formatDecimal(quantity.multiply(action.getTradePrice())));
         	}
         pModel.addAttribute("symbol", symbol);
         pModel.addAttribute("symbol1", symbol1);
