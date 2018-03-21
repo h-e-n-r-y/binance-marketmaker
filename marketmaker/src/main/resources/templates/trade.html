@@ -64,7 +64,7 @@
     		var quantity2 = [[${quantity2}]];
     	</script>
     		<input type="hidden" name="symbol" th:value="${symbol}"/>
-    		Quantity (<span th:text="${symbol1}"></span>) : <input id="input_quantity" name="quantity" type="number" min="0" th:value="${quantity}" th:step="${qtyStep}" onchange="adjustPrice()" th:disabled="${status.name} == 'PROPOSE_SELL'"/>
+    		Quantity (<span th:text="${symbol1}"></span>) : <input id="input_quantity" name="quantity" type="number" min="0" th:value="${quantity}" th:step="${qtyStep}" onchange="adjustPrice()" />
     		Price: <input id="input_price" name="pricelimit" type="number" min="0" th:value="${tradePrice}" th:step="${priceStep}" onchange="adjustQty()"/>
     		<input type="hidden" name="side" th:value="(${status.name} == 'PROPOSE_BUY')? 'buy' : 'sell'"/>
     		<input type="submit" th:class="(${status.name} == 'PROPOSE_BUY')? 'submit-buy' : 'submit-sell'" th:value="(${status.name} == 'PROPOSE_BUY')? 'Buy' : 'Sell'" name="createOrder"/>
