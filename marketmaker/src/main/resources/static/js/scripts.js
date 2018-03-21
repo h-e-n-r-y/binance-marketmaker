@@ -231,15 +231,19 @@ function adjustPrice() {
 }
 
 function adjustQty() {
-	var newPrice = $("#input_price").val();
+	tradePrice = $("#input_price").val();
 	var newQty;
 	if (buy) {
-		newQty = qty2 / newPrice; 
+		newQty = qty2 / tradePrice; 
 		$("#input_quantity").val(quantityScale(newQty, qtyScale));
 	} else {
-		newQty = quantity * newPrice; 
+		newQty = quantity * tradePrice; 
 		$("#quantity2").text(quantityScale(newQty, 5));
 	}
+	
+	dataArr[0][6] = parseFloat(tradePrice);
+	dataArr[99][6] = parseFloat(tradePrice);
+	drawChart();
 }
 
 function quantityScale(qty, scale) {
