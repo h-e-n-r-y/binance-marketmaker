@@ -129,60 +129,62 @@ public class ChartController {
         BigDecimal sum = BigDecimal.valueOf(0L);
         BigDecimal actlimit = null;
         for(int i = 0; i < chartData.size(); i++) {
-        		Candlestick cs = chartData.get(i);
-        		BigDecimal close = Utils.parseDecimal(cs.getClose());
-        		sum = sum.add(close);
-        		if (i >= 100) {
-        			Candlestick cs2 = chartData.get(i - 100);
-            		BigDecimal close2 = Utils.parseDecimal(cs2.getClose());
-        			sum = sum.subtract(close2);
-        		}
-        		if (i < s - 100) {
-        			continue;
-        		}
-        		List<Object> gcs = new ArrayList<>();
-        		
-        		gcs.add(df.format(new Date(cs.getOpenTime())));
-        		BigDecimal low = Utils.parseDecimal(cs.getLow());
-        		gcs.add(Utils.scalePrice(low, pSymbol, exchangeInfo));
-        		BigDecimal open = Utils.parseDecimal(cs.getOpen());
-        		gcs.add(Utils.scalePrice(open, pSymbol, exchangeInfo));
-        		gcs.add(Utils.scalePrice(close, pSymbol, exchangeInfo));
-        		BigDecimal high = Utils.parseDecimal(cs.getHigh());
-        		gcs.add(Utils.scalePrice(high, pSymbol, exchangeInfo));
-        		BigDecimal average = sum.divide(ONE_HUNDRED, 8, RoundingMode.HALF_EVEN);
-        		gcs.add(Utils.scalePrice(average, pSymbol, exchangeInfo));
+    		Candlestick cs = chartData.get(i);
+    		BigDecimal close = Utils.parseDecimal(cs.getClose());
+    		sum = sum.add(close);
+    		if (i >= 100) {
+    			Candlestick cs2 = chartData.get(i - 100);
+        		BigDecimal close2 = Utils.parseDecimal(cs2.getClose());
+    			sum = sum.subtract(close2);
+    		}
+    		if (i < s - 100) {
+    			continue;
+    		}
+    		List<Object> gcs = new ArrayList<>();
+    		
+    		gcs.add(df.format(new Date(cs.getOpenTime())));
+    		BigDecimal low = Utils.parseDecimal(cs.getLow());
+    		gcs.add(Utils.scalePrice(low, pSymbol, exchangeInfo));
+    		BigDecimal open = Utils.parseDecimal(cs.getOpen());
+    		gcs.add(Utils.scalePrice(open, pSymbol, exchangeInfo));
+    		gcs.add(Utils.scalePrice(close, pSymbol, exchangeInfo));
+    		BigDecimal high = Utils.parseDecimal(cs.getHigh());
+    		gcs.add(Utils.scalePrice(high, pSymbol, exchangeInfo));
+    		BigDecimal average = sum.divide(ONE_HUNDRED, 8, RoundingMode.HALF_EVEN);
+    		gcs.add(Utils.scalePrice(average, pSymbol, exchangeInfo));
 
-        		if (limit != null) {
-            		if ((i == s - 100) || (i == s - 1)) {
-            			gcs.add(limit);
-            		} else {
-            			gcs.add(null);
-            		}
-        		}
-        		if (i == s - 100) {
-        			if (orders != null) {
-        				actlimit = getOrderLimitBefore(orders, cs.getCloseTime());
-        				if (actlimit != null) {
-        					gcs.add(actlimit);
-        				}
-        			}
-        		} else if (i == s - 1) {
-    				if (actlimit != null) {
-    					gcs.add(actlimit);
-    				}
+    		if (limit != null) {
+        		if ((i == s - 100) || (i == s - 1)) {
+        			gcs.add(limit);
         		} else {
-        			if (actlimit != null) {
-	    				BigDecimal curlimit = getOrderLimit(orders, cs.getOpenTime(), cs.getCloseTime());
-	    				gcs.add(curlimit);
-	    				if (curlimit != null) {
-	    					actlimit = curlimit;
-	    				}
-        			}
+        			gcs.add(null);
         		}
+    		}
+    		if (i == s - 100) {
+    			if (orders != null) {
+    				actlimit = getOrderLimitBefore(orders, cs.getCloseTime());
+   					gcs.add(actlimit);
+    			}
+    		} else if (i == s - 1) {
+				gcs.add(actlimit);
+    		} else {
+				BigDecimal curlimit = getOrderLimit(orders, cs.getOpenTime(), cs.getCloseTime());
+				gcs.add(curlimit);
+				if (curlimit != null) {
+					actlimit = curlimit;
+				}
+    		}
 
-        		googleChartData.add(gcs);
+    		googleChartData.add(gcs);
+        		
         }
+		if (actlimit == null) {
+			for (List<Object> gcs2 : googleChartData) {
+				if (!gcs2.isEmpty()) {
+					gcs2.remove(gcs2.size() - 1);
+				}
+			}
+		}
         
         model.addAttribute("chartData", googleChartData);
         model.addAttribute("interval", pInterval.name());
