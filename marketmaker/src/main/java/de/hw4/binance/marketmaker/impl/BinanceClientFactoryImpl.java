@@ -75,6 +75,7 @@ public class BinanceClientFactoryImpl implements BinanceClientFactory {
 		BinanceApiRestClient client = anonClients.get();
 		if (client == null) {
 			client = BinanceApiClientFactory.newInstance().newRestClient();
+			anonClients.set(client);
 		}
 		return client;
 	}
