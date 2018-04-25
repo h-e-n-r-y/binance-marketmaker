@@ -45,7 +45,7 @@ public class Scheduler {
     @Autowired
     Trader trader;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedDelay = 5000, initialDelay = 300_000L)
     public void run() {
         
         List<SchedulerTask> activeTasks = tasksRepo.findByActive(true);
