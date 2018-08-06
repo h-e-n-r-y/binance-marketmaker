@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>com.binance.api</groupId>
 			<artifactId>binance-api-client</artifactId>
-			<version>1.0.3-HENRY</version>
+			<version>1.0.4-HENRY</version>
 		</dependency>
 		
 		<dependency>
